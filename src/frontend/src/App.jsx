@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
+import TitleBar from "./components/TitleBar";
 import Create from "./pages/Create";
 import Collection from "./pages/Collection";
 import Insights from "./pages/Insights";
@@ -25,14 +26,17 @@ export default function App() {
   };
 
   return (
-    <div className="flex">
-      <Sidebar
-        active={active}
-        setActive={setActive}
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-      />
-      <div className="flex-1 p-6 bg-gray-200">{renderContent()}</div>
+    <div className="flex flex-col w-full">
+      <TitleBar />
+      <div className="flex">
+        <Sidebar
+          active={active}
+          setActive={setActive}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
+        <div className="flex-1 p-6 bg-gray-200">{renderContent()}</div>
+      </div>
     </div>
   );
 }
