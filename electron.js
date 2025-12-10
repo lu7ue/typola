@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const path = require("path");
 const Database = require("better-sqlite3");
 
@@ -13,6 +13,8 @@ function createWindow() {
             preload: path.join(__dirname, "src/backend/preload.js"),
         },
     });
+    
+    Menu.setApplicationMenu(null);
 
     win.loadURL("http://localhost:5173");
 }
