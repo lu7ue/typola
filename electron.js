@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const path = require("path");
 const Database = require("better-sqlite3");
 
@@ -6,33 +6,42 @@ let win;
 let db;
 
 function createWindow() {
-    win = new BrowserWindow({
-        width: 1200,
-        height: 800,
-        webPreferences: {
-            preload: path.join(__dirname, "src/backend/preload.js"),
-        },
-    });
+  win = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    frame: false,
+    webPreferences: {
+      preload: path.join(__dirname, "src/backend/preload.js"),
+    },
+  });
 
-    win.loadURL("http://localhost:5173");
+  ipcMain.handle("win:minimize", () => win.minimize());
+  ipcMain.handle("win:maximize", () =>
+    win.isMaximized() ? win.unmaximize() : win.maximize()
+  );
+  ipcMain.handle("win:close", () => win.close());
+
+  Menu.setApplicationMenu(null);
+
+  win.loadURL("http://localhost:5173");
 }
 
 app.whenReady().then(() => {
-    db = new Database(path.join(__dirname, "src/db.sqlite"));
+  db = new Database(path.join(__dirname, "src/db.sqlite"));
 
-    db.prepare(`
+  db.prepare(
+    `
     CREATE TABLE IF NOT EXISTS words (
         id INTEGER PRIMARY KEY,
         text TEXT NOT NULL
     )
-    `).run();
+    `
+  ).run();
 
-    createWindow();
+  createWindow();
 });
-
 
 ipcMain.handle("db:getAllWords", () => {
-    const rows = db.prepare("SELECT * FROM words").all();
-    return rows;
+  const rows = db.prepare("SELECT * FROM words").all();
+  return rows;
 });
-
