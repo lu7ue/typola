@@ -26,16 +26,20 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="h-screen flex flex-col">
       <TitleBar />
-      <div className="flex">
+
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar
           active={active}
           setActive={setActive}
           collapsed={collapsed}
           setCollapsed={setCollapsed}
         />
-        <div className="flex-1 p-6 bg-gray-200">{renderContent()}</div>
+
+        <div className="flex-1 overflow-y-auto p-6 bg-white">
+          {renderContent()}
+        </div>
       </div>
     </div>
   );

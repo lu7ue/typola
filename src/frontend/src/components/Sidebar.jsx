@@ -1,5 +1,3 @@
-import React from "react";
-import Icon from "../assets/icons/fold.png";
 import CreateIcon from "../assets/icons/create.png";
 import CollectionIcon from "../assets/icons/collection.png";
 import InsightsIcon from "../assets/icons/insights.png";
@@ -24,8 +22,9 @@ export default function Sidebar({
   return (
     <div
       className={`
-        h-screen bg-white text-black flex flex-col transition-all duration-300
-        ${collapsed ? "w-14" : "w-64"} px-1 py-4`}
+    bg-white text-black flex flex-col transition-all duration-300 border-r-2 border-gray-200
+    ${collapsed ? "w-14" : "w-48"} px-1 py-4
+  `}
     >
       {/* Logo and collapse button */}
       <div className="flex items-center justify-between px-2 mb-4">
@@ -54,8 +53,8 @@ export default function Sidebar({
                 flex items-center gap-3 p-3 mb-2 cursor-pointer rounded-xl transition-all duration-200
                 ${
                   active === item.name
-                    ? "bg-[#706df0]"
-                    : "hover:bg-[#f1f1fb] hover:text-black"
+                    ? "bg-[#7e7bf1]"
+                    : "hover:bg-gray-100 hover:text-black"
                 }`}
             >
               <img src={item.icon} alt={item.name} className="w-6 h-6" />
@@ -69,12 +68,14 @@ export default function Sidebar({
 
       {/* Footer */}
       <div
-        className={`px-4 mt-auto ${
-          collapsed ? "" : "border-t border-gray-500"
-        }`}
+        className={`mt-auto ${
+          collapsed ? "" : "border-t border-gray-200"
+        } h-5 flex items-center justify-center`}
       >
         {!collapsed && (
-          <span className="text-sm text-gray-600">Footer Placeholder</span>
+          <span className="text-sm text-gray-500 leading-none mt-3">
+            Footer Placeholder
+          </span>
         )}
       </div>
     </div>
