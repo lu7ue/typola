@@ -1,11 +1,15 @@
-export default function Create({ onImport }) {
+import { useNavigate } from "react-router-dom";
+
+export default function Create() {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-4">
       <div>
         <h2 className="text-2xl mb-2">Create Page</h2>
 
         <button
-          onClick={() => typeof onImport === "function" && onImport()}
+          onClick={() => navigate("/importData")}
           className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
         >
           {/* Import icon */}
