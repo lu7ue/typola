@@ -254,12 +254,12 @@ export default function Create() {
             draggableId={String(card.id)}
             index={index}
           >
-            {(provided, snapshot) => (
+            {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                className={`transition-shadow cursor-grab ${snapshot.isDragging ? "shadow-lg cursor-grabbing" : "shadow-sm"}`}
+                className={`transition-shadow cursor-grab`}
               >
                 <Card
                   card={card}
