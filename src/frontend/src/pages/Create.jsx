@@ -293,7 +293,7 @@ export default function Create() {
         </button>
         <button
           onClick={handleCreateSet}
-          className="px-5 py-2 rounded-full bg-[#4f5df5] text-white hover:opacity-90"
+          className="px-5 py-2 rounded-full bg-[#7e7bf1] text-white hover:opacity-90"
         >
           Create Set
         </button>
