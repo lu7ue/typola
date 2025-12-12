@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Card from "../components/Card";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 export default function Create({ onCreateDone }) {
   const [title, setTitle] = useState("");
@@ -17,7 +18,10 @@ export default function Create({ onCreateDone }) {
   });
 
   const addCard = () => {
-    setCards([...cards, { id: cards.length + 1, term: "", definition: "", image: null }]);
+    setCards([
+      ...cards,
+      { id: cards.length + 1, term: "", definition: "", image: null },
+    ]);
   };
 
   const deleteCard = (id) => {
@@ -28,7 +32,9 @@ export default function Create({ onCreateDone }) {
   };
 
   const updateCard = (id, field, value) => {
-    setCards(cards.map((card) => (card.id === id ? { ...card, [field]: value } : card)));
+    setCards(
+      cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
+    );
   };
 
   const handleCreateSet = async () => {
@@ -45,6 +51,13 @@ export default function Create({ onCreateDone }) {
     }
     if (!definitionLanguage) {
       newErrors.definitionLanguage = "Please select a definition language";
+      hasError = true;
+    }
+
+
+    const firstCard = cards[0];
+    if (!firstCard.term && !firstCard.definition) {
+      newErrors.firstCard = "Please fill in at least the first card's term or definition";
       hasError = true;
     }
 
@@ -78,14 +91,29 @@ export default function Create({ onCreateDone }) {
   };
 
   const inputClass = (error) =>
-    `w-full border-b-2 p-3 rounded-lg bg-gray-50 focus:outline-none focus:border-[#4f5df5] ${
-      error ? "border-red-500" : "border-gray-300"
+    `w-full p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#4f5df5] ${error ? "ring-red-500" : ""
     }`;
 
   const selectClass = (error) =>
-    `w-full p-3 rounded-lg bg-gray-50 border-2 focus:outline-none focus:border-[#4f5df5] ${
-      error ? "border-red-500" : "border-gray-300"
+    `w-full p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#4f5df5] ${error ? "ring-red-500" : ""
     }`;
+
+  // drag card
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const reordered = Array.from(cards);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+
+
+    const renumbered = reordered.map((card, index) => ({
+      ...card,
+      id: index + 1,
+    }));
+
+    setCards(renumbered);
+  };
 
   return (
     <div className="space-y-8 max-w-5xl">
@@ -116,7 +144,7 @@ export default function Create({ onCreateDone }) {
       <div>
         <label className="block mb-1 font-medium">Description</label>
         <textarea
-          className="w-full p-3 rounded-lg bg-gray-50 border-2 border-gray-300 focus:outline-none focus:border-[#4f5df5]"
+          className="w-full p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#4f5df5]"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
@@ -167,17 +195,39 @@ export default function Create({ onCreateDone }) {
         </div>
       </div>
 
-      {/* Cards */}
-      <div className="space-y-4">
-        {cards.map((card) => (
-          <Card
-            key={card.id}
-            card={card}
-            updateCard={updateCard}
-            deleteCard={deleteCard}
-          />
-        ))}
-      </div>
+      {/* Cards with DragDrop */}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="cards-droppable">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+              {errors.firstCard && (
+                <p className="text-red-500 text-sm mb-2">{errors.firstCard}</p>
+              )}
+              {cards.map((card, index) => (
+                <Draggable key={card.id} draggableId={String(card.id)} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className={`transition-shadow ${snapshot.isDragging ? "shadow-lg" : "shadow-sm"
+                        }`}
+                    >
+
+                      <Card
+                        card={card}
+                        updateCard={updateCard}
+                        deleteCard={deleteCard}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {/* Buttons */}
       <div className="flex gap-4 mt-6">

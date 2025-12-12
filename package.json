@@ -29,7 +29,6 @@
     "wait-on": "^9.0.3"
   },
   "dependencies": {
-    "better-sqlite3": "^12.5.0",
-    "react-router-dom": "^7.10.1"
+    "better-sqlite3": "^12.5.0"
   }
 }
