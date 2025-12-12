@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Card from "../components/Card";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { useNavigate } from "react-router-dom";
 
-export default function Create({ onCreateDone }) {
+export default function Create() {
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [termLanguage, setTermLanguage] = useState("");
@@ -15,6 +17,7 @@ export default function Create({ onCreateDone }) {
     title: "",
     termLanguage: "",
     definitionLanguage: "",
+    firstCard: "",
   });
 
   const addCard = () => {
@@ -35,6 +38,20 @@ export default function Create({ onCreateDone }) {
     setCards(
       cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
     );
+    
+    if (id === 1 && (field === "term" || field === "definition")) {
+      setErrors((prev) => {
+        const firstCardContent =
+          id === 1 ? (field === "term" ? value : cards[0].term) : cards[0].term;
+        const firstCardDef =
+          id === 1 ? (field === "definition" ? value : cards[0].definition) : cards[0].definition;
+
+        if (firstCardContent || firstCardDef) {
+          return { ...prev, firstCard: "" };
+        }
+        return prev;
+      });
+    }
   };
 
   const handleCreateSet = async () => {
@@ -87,7 +104,7 @@ export default function Create({ onCreateDone }) {
     setDefinitionLanguage("");
     setErrors({ title: "", termLanguage: "", definitionLanguage: "" });
 
-    if (typeof onCreateDone === "function") onCreateDone();
+    navigate("/collection");
   };
 
   const inputClass = (error) =>
