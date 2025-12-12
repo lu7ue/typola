@@ -1,62 +1,67 @@
 const TrashIcon = ({ size = 20, color = "gray" }) => (
-    <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-    >
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6l-1 14H6L5 6" />
-        <path d="M10 11v6" />
-        <path d="M14 11v6" />
-        <path d="M9 6V4h6v2" />
-    </svg>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6l-1 14H6L5 6" />
+    <path d="M10 11v6" />
+    <path d="M14 11v6" />
+    <path d="M9 6V4h6v2" />
+  </svg>
 );
 
 export default function Card({ card, updateCard, deleteCard, disableDelete }) {
-    return (
-        <div className="relative bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-            {/* Trash Button */}
-            <button
-                onClick={() => !disableDelete && deleteCard(card.id)}
-                className={`absolute top-2 right-2 p-1 rounded-full flex items-center justify-center
-                    ${disableDelete ? "bg-gray-100 cursor-not-allowed" : "hover:bg-gray-200 cursor-pointer"} transition`}
-                title={disableDelete ? "Cannot delete the only card" : "Delete card"}
-            >
-                <TrashIcon size={16} color={disableDelete ? "#ccc" : "#4b5563"} />
-            </button>
+  return (
+    <div className="relative pr-10 pt-1">
+      {/* Trash Button */}
+      <button
+        onClick={() => !disableDelete && deleteCard(card.id)}
+        className={`absolute top-0 right-0 p-1 rounded-full flex items-center justify-center
+                    ${
+                      disableDelete
+                        ? "bg-gray-100 cursor-not-allowed"
+                        : "hover:bg-gray-200 cursor-pointer"
+                    } transition`}
+        title={disableDelete ? "Cannot delete the only card" : "Delete card"}
+      >
+        <TrashIcon size={16} color={disableDelete ? "#ccc" : "#4b5563"} />
+      </button>
 
-            {/* Card ID */}
-            <div className="text-lg font-medium mb-3">Card {card.id}</div>
-
-            {/* Inputs */}
-            <div className="grid grid-cols-2 gap-4">
-                {/* Term */}
-                <div>
-                    <label className="block text-sm mb-1 text-gray-500">Term</label>
-                    <input
-                        className="w-full p-3 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none focus:border-[#4f5df5]"
-                        placeholder="Enter term"
-                        value={card.term}
-                        onChange={(e) => updateCard(card.id, "term", e.target.value)}
-                    />
-                </div>
-
-                {/* Definition */}
-                <div>
-                    <label className="block text-sm mb-1 text-gray-500">Definition</label>
-                    <input
-                        className="w-full p-3 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none focus:border-[#4f5df5]"
-                        placeholder="Enter definition"
-                        value={card.definition}
-                        onChange={(e) => updateCard(card.id, "definition", e.target.value)}
-                    />
-                </div>
-            </div>
+      {/* Inputs */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* Term */}
+        <div>
+          <input
+            className="w-full bg-gray-50 rounded-lg px-3 py-3 min-h-[52px]
+           border border-gray-100
+           focus:outline-none focus:ring-2 focus:ring-[#7e7bf1]"
+            placeholder="Enter term"
+            value={card.term}
+            onChange={(e) => updateCard(card.id, "term", e.target.value)}
+          />
+          <div className="text-xs text-gray-400 mt-2">TERM</div>
         </div>
-    );
+
+        {/* Definition */}
+        <div>
+          <input
+            className="w-full bg-gray-50 rounded-lg px-3 py-3 min-h-[52px]
+           border border-gray-100
+           focus:outline-none focus:ring-2 focus:ring-[#7e7bf1]"
+            placeholder="Enter definition"
+            value={card.definition}
+            onChange={(e) => updateCard(card.id, "definition", e.target.value)}
+          />
+          <div className="text-xs text-gray-400 mt-2">DEFINITION</div>
+        </div>
+      </div>
+    </div>
+  );
 }
