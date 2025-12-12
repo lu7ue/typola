@@ -1,16 +1,108 @@
-import CreateIcon from "../assets/icons/create.png";
-import CollectionIcon from "../assets/icons/collection.png";
-import InsightsIcon from "../assets/icons/insights.png";
-import SettingIcon from "../assets/icons/setting.png";
-import ArrowToLeft from "../assets/icons/arrow-to-left.png";
-import ArrowToRight from "../assets/icons/arrow-to-right.png";
+// SVG icon components
+const CreateIcon = ({ size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 5v14" />
+    <path d="M5 12h14" />
+  </svg>
+);
+
+const CollectionIcon = ({ size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="3" y="3" width="7" height="7" />
+    <rect x="14" y="3" width="7" height="7" />
+    <rect x="3" y="14" width="7" height="7" />
+    <rect x="14" y="14" width="7" height="7" />
+  </svg>
+);
+
+const InsightsIcon = ({ size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M3 3v18h18" />
+    <path d="M7 15v3" />
+    <path d="M12 9v9" />
+    <path d="M17 5v13" />
+  </svg>
+);
+
+const SettingIcon = ({ size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .7.4 1.34 1.02 1.64.31.15.65.23.98.23H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
+);
+
+const ArrowToLeft = ({ size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+);
+
+const ArrowToRight = ({ size = 24 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9 18l6-6-6-6" />
+  </svg>
+);
 
 // Menu items configuration
 const menuItems = [
-  { name: "Create", icon: CreateIcon },
-  { name: "Collection", icon: CollectionIcon },
-  { name: "Insights", icon: InsightsIcon },
-  { name: "Setting", icon: SettingIcon },
+  { name: "Create", Icon: CreateIcon },
+  { name: "Collection", Icon: CollectionIcon },
+  { name: "Insights", Icon: InsightsIcon },
+  { name: "Setting", Icon: SettingIcon },
 ];
 
 export default function Sidebar({
@@ -28,17 +120,12 @@ export default function Sidebar({
     >
       {/* Logo and collapse button */}
       <div className="flex items-center justify-between px-2 mb-4">
-        {/* put something else here if needed */}
-        {!collapsed && <h1 className="text-xl font-bold italic"></h1>}{" "}
+        {!collapsed && <h1 className="text-xl font-bold italic"></h1>}
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="text-black text-xl focus:outline-none"
         >
-          <img
-            src={collapsed ? ArrowToRight : ArrowToLeft}
-            alt="Toggle"
-            className="w-6 h-6"
-          />
+          {collapsed ? <ArrowToRight /> : <ArrowToLeft />}
         </button>
       </div>
 
@@ -57,9 +144,8 @@ export default function Sidebar({
                     : "hover:bg-gray-100 hover:text-black"
                 }`}
             >
-              <img src={item.icon} alt={item.name} className="w-6 h-6" />
+              <item.Icon />
 
-              {/* Menu text, hidden when collapsed */}
               {!collapsed && <span>{item.name}</span>}
             </li>
           ))}
