@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function ImportData() {
+  const navigate = useNavigate();
   const [rawText, setRawText] = useState("");
 
   const [termSeparator, setTermSeparator] = useState("dot");
@@ -181,7 +183,7 @@ export default function ImportData() {
               {cards.map((card, index) => (
                 <div
                   key={index}
-                  className="flex gap-6 items-center bg-white rounded-xl p-4"
+                  className="flex gap-6 items-center bg-white rounded-xl p-4 border border-gray-200"
                 >
                   {/* Index */}
                   <div className="w-6 text-gray-500 text-sm">{index + 1}</div>
@@ -189,14 +191,14 @@ export default function ImportData() {
                   {/* Card */}
                   <div className="flex-1 grid grid-cols-2 gap-6">
                     <div>
-                      <div className="bg-gray-50 rounded-lg p-3 text-gray-700 min-h-[52px] flex items-center">
+                      <div className="bg-gray-50 rounded-lg p-3 text-gray-700 min-h-[52px] flex items-center border border-gray-100">
                         {card.term}
                       </div>
                       <div className="text-xs text-gray-400 mt-2">TERM</div>
                     </div>
 
                     <div>
-                      <div className="bg-gray-50 rounded-lg p-3 text-gray-700 min-h-[52px] flex items-center">
+                      <div className="bg-gray-50 rounded-lg p-3 text-gray-700 min-h-[52px] flex items-center border border-gray-100">
                         {card.definition}
                       </div>
                       <div className="text-xs text-gray-400 mt-2">
@@ -210,10 +212,17 @@ export default function ImportData() {
 
             {/* Divider + Buttons (only when there is preview) */}
             <div className="border-t border-gray-200 pt-6 flex justify-end gap-4">
-              <button className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100">
+              <button
+                onClick={() => navigate("/create")}
+                className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+              >
                 Cancel
               </button>
-              <button className="px-5 py-2 rounded-full bg-[#4f5df5] text-white hover:opacity-90">
+
+              <button
+                onClick={() => navigate("/create")}
+                className="px-5 py-2 rounded-full bg-[#4f5df5] text-white hover:opacity-90"
+              >
                 Ready to Import
               </button>
             </div>
