@@ -13,7 +13,9 @@ export default function App() {
   const renderContent = () => {
     switch (active) {
       case "Create":
-        return <Create />;
+        return <Create onCreateDone={() => {
+          setActive("Collection");
+        }} />;
       case "Collection":
         return <Collection />;
       case "Insights":
