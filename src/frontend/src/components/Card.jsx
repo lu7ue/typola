@@ -17,17 +17,17 @@ const TrashIcon = ({ size = 20, color = "gray" }) => (
     </svg>
 );
 
-export default function Card({ card, updateCard, deleteCard }) {
+export default function Card({ card, updateCard, deleteCard, disableDelete }) {
     return (
         <div className="relative bg-white p-4 rounded-xl shadow-sm border border-gray-200">
             {/* Trash Button */}
             <button
-                onClick={() => !card.isDefault && deleteCard(card.id)}
+                onClick={() => !disableDelete && deleteCard(card.id)}
                 className={`absolute top-2 right-2 p-1 rounded-full flex items-center justify-center
-            ${card.isDefault ? "bg-gray-100 cursor-not-allowed" : "hover:bg-gray-200 cursor-pointer"} transition`}
-                title={card.isDefault ? "Cannot delete default card" : "Delete card"}
+                    ${disableDelete ? "bg-gray-100 cursor-not-allowed" : "hover:bg-gray-200 cursor-pointer"} transition`}
+                title={disableDelete ? "Cannot delete the only card" : "Delete card"}
             >
-                <TrashIcon size={16} color={card.isDefault ? "#ccc" : "#4b5563"} />
+                <TrashIcon size={16} color={disableDelete ? "#ccc" : "#4b5563"} />
             </button>
 
             {/* Card ID */}

@@ -38,7 +38,7 @@ export default function Create() {
     setCards(
       cards.map((card) => (card.id === id ? { ...card, [field]: value } : card))
     );
-    
+
     if (id === 1 && (field === "term" || field === "definition")) {
       setErrors((prev) => {
         const firstCardContent =
@@ -143,35 +143,35 @@ export default function Create() {
       </div>
 
       <button
-          onClick={() => navigate("/importData")}
-          className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+        onClick={() => navigate("/importData")}
+        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+      >
+        {/* Import icon */}
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
-          {/* Import icon */}
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              d="M12 3v10m0 0l4-4m-4 4l-4-4"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          Import
-        </button>
+          <path
+            d="M12 3v10m0 0l4-4m-4 4l-4-4"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Import
+      </button>
 
       {/* Title */}
       <div>
@@ -245,37 +245,39 @@ export default function Create() {
 
       {/* Cards with DragDrop */}
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="cards-droppable">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-              {errors.firstCard && (
-                <p className="text-red-500 text-sm mb-2">{errors.firstCard}</p>
-              )}
-              {cards.map((card, index) => (
-                <Draggable key={card.id} draggableId={String(card.id)} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={`transition-shadow ${snapshot.isDragging ? "shadow-lg" : "shadow-sm"
-                        }`}
-                    >
+  <Droppable droppableId="cards-droppable">
+    {(provided) => (
+      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+        {cards.map((card, index) => (
+          <Draggable
+            key={card.id}
+            draggableId={String(card.id)}
+            index={index}
+          >
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                className={`transition-shadow cursor-grab ${snapshot.isDragging ? "shadow-lg cursor-grabbing" : "shadow-sm"}`}
+              >
+                <Card
+                  card={card}
+                  updateCard={updateCard}
+                  deleteCard={deleteCard}
+                  disableDelete={cards.length === 1}
+                />
+              </div>
+            )}
+          </Draggable>
+        ))}
+        {provided.placeholder}
+      </div>
+    )}
+  </Droppable>
+</DragDropContext>
 
-                      <Card
-                        card={card}
-                        updateCard={updateCard}
-                        deleteCard={deleteCard}
-                      />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+
 
       {/* Buttons */}
       <div className="flex gap-4 mt-6">
