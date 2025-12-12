@@ -135,19 +135,21 @@ export default function Create() {
   return (
     <div className="space-y-8 max-w-5xl">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl mb-1">Create Set</h2>
-        <p className="text-gray-500 text-sm">
-          Fill in the details below and add cards to your set.
-        </p>
-      </div>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl mb-1">Create Set</h2>
+          <p className="text-gray-500 text-sm">
+            Fill in the details below and add cards to your set.
+          </p>
+        </div>
 
-      <button
-        onClick={() => navigate("/importData")}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
-      >
-        Import
-      </button>
+        <button
+          onClick={() => navigate("/importData")}
+          className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+        >
+          Import Data
+        </button>
+      </div>
 
       {/* Title */}
       <div>
