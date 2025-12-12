@@ -17,13 +17,40 @@ const TrashIcon = ({ size = 20, color = "gray" }) => (
   </svg>
 );
 
+const DragIcon = ({ size = 16, color = "gray" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="9" cy="5" r="1" />
+    <circle cx="15" cy="5" r="1" />
+    <circle cx="9" cy="12" r="1" />
+    <circle cx="15" cy="12" r="1" />
+    <circle cx="9" cy="19" r="1" />
+    <circle cx="15" cy="19" r="1" />
+  </svg>
+);
+
 export default function Card({ card, updateCard, deleteCard, disableDelete }) {
   return (
     <div className="relative pr-10 pt-1">
+      {/* Drag button */}
+      <button
+        className="absolute top-0 right-0 p-1 rounded-full cursor-grab hover:bg-gray-200"
+        title="Drag card"
+      >
+        <DragIcon size={16} color="#6b7280" />
+      </button>
       {/* Trash Button */}
       <button
         onClick={() => !disableDelete && deleteCard(card.id)}
-        className={`absolute top-0 right-0 p-1 rounded-full flex items-center justify-center
+        className={`absolute bottom-0 right-0 p-1 rounded-full flex items-center justify-center
                     ${
                       disableDelete
                         ? "bg-gray-100 cursor-not-allowed"
