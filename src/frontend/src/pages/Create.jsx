@@ -2,6 +2,7 @@ import { useState } from "react";
 import Card from "../components/Card";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useNavigate } from "react-router-dom";
+import CustomSelect from "../components/Select";
 
 export default function Create() {
   const navigate = useNavigate();
@@ -112,11 +113,6 @@ export default function Create() {
       error ? "border-red-400" : "border-gray-300"
     }`;
 
-  const selectClass = (error) =>
-    `w-full p-4 border-2 rounded-lg bg-white focus:outline-none focus:border-[#7e7bf1] ${
-      error ? "border-red-400" : "border-gray-300"
-    }`;
-
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -189,41 +185,42 @@ export default function Create() {
           <label className="block text-lg font-semibold mb-2">
             Term Language *
           </label>
-          <select
-            className={selectClass(errors.termLanguage)}
+        <CustomSelect
             value={termLanguage}
-            onChange={(e) => {
-              setTermLanguage(e.target.value);
-              if (e.target.value)
-                setErrors((prev) => ({ ...prev, termLanguage: "" }));
+            onChange={(v) => {
+              setTermLanguage(v);
+              if (v) setErrors((prev) => ({ ...prev, termLanguage: "" }));
             }}
-          >
-            <option value=""> - </option>
-            <option value="en">English</option>
-            <option value="nl">Dutch</option>
-            <option value="kr">Korean</option>
-          </select>
-        </div>
+            placeholder="Select a language"
+            error={errors.termLanguage}
+            options={[
+              { value: "en", label: "English" },
+              { value: "nl", label: "Dutch" },
+              { value: "kr", label: "Korean" },
+            ]}
+        />
+      </div>
 
         <div>
           <label className="block text-lg font-semibold mb-2">
             Definition Language *
           </label>
-          <select
-            className={selectClass(errors.definitionLanguage)}
-            value={definitionLanguage}
-            onChange={(e) => {
-              setDefinitionLanguage(e.target.value);
-              if (e.target.value)
-                setErrors((prev) => ({ ...prev, definitionLanguage: "" }));
-            }}
-          >
-            <option value=""> - </option>
-            <option value="en">English</option>
-            <option value="nl">Dutch</option>
-            <option value="kr">Korean</option>
-          </select>
+          <CustomSelect
+              value={definitionLanguage}
+              onChange={(v) => {
+                setDefinitionLanguage(v);
+                if (v) setErrors((prev) => ({ ...prev, definitionLanguage: "" }));
+              }}
+              placeholder="Select a language"
+              error={errors.definitionLanguage}
+              options={[
+                { value: "en", label: "English" },
+                { value: "nl", label: "Dutch" },
+                { value: "kr", label: "Korean" },
+              ]}
+          />
         </div>
+
       </div>
 
       {/* Cards */}
