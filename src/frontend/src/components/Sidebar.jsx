@@ -68,36 +68,39 @@ const SettingIcon = ({ size = 24 }) => (
   </svg>
 );
 
-const ArrowToLeft = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M15 18l-6-6 6-6" />
-  </svg>
+const BarChevronLeft = ({ size = 24 }) => (
+    <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+    >
+      <path d="M5 5v14" />
+      <path d="M17 18l-6-6 6-6" />
+    </svg>
 );
 
-const ArrowToRight = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M9 18l6-6-6-6" />
-  </svg>
+const ChevronRightBar = ({ size = 24 }) => (
+    <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+    >
+      <path d="M7 18l6-6-6-6" />
+      <path d="M19 5v14" />
+    </svg>
 );
-
 
 const menuItems = [
   { name: "Create", Icon: CreateIcon, path: "/create" },
@@ -117,10 +120,10 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       <div className="flex items-center justify-between px-2 mb-4">
         {!collapsed && <h1 className="text-xl font-bold italic"></h1>}
         <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="text-black text-xl focus:outline-none"
+            onClick={() => setCollapsed(!collapsed)}
+            className="text-gray-700 hover:text-black focus:outline-none"
         >
-          {collapsed ? <ArrowToRight /> : <ArrowToLeft />}
+          {collapsed ? <ChevronRightBar size={24} /> : <BarChevronLeft size={24} />}
         </button>
       </div>
 
