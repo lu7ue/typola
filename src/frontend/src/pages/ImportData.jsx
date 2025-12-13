@@ -50,7 +50,7 @@ export default function ImportData() {
   const hasPreview = cards.length > 0;
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-8 w-full">
       {/* Header */}
       <div>
         <h2 className="text-2xl mb-1">Import your data</h2>
@@ -72,8 +72,8 @@ export default function ImportData() {
       />
 
       {/* Options */}
-      <div className="grid grid-cols-2 gap-16">
-        {/* Between Term and Definition */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {/* Between Term and Definition */}
         <div className="space-y-5">
           <h3 className="text-lg font-semibold">Between Term and Definition</h3>
 
@@ -183,14 +183,13 @@ export default function ImportData() {
               {cards.map((card, index) => (
                 <div
                   key={index}
-                  className="flex gap-6 items-center bg-white rounded-xl p-4 border border-gray-200"
-                >
+                  className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"                >
                   {/* Index */}
                   <div className="w-6 text-gray-500 text-sm">{index + 1}</div>
 
                   {/* Card */}
-                  <div className="flex-1 grid grid-cols-2 gap-6">
-                    <div>
+                  <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
                       <div className="bg-gray-50 rounded-lg p-3 text-gray-700 min-h-[52px] flex items-center border border-gray-100">
                         {card.term}
                       </div>
@@ -211,7 +210,7 @@ export default function ImportData() {
             </div>
 
             {/* Divider + Buttons (only when there is preview) */}
-            <div className="border-t border-gray-200 pt-6 flex justify-end gap-4">
+            <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row sm:justify-end gap-4">
               <button
                 onClick={() => navigate("/create")}
                 className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"

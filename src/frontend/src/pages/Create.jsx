@@ -133,10 +133,10 @@ export default function Create() {
   };
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-8 w-full">
       {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+      <div>
           <h2 className="text-2xl mb-1">Create Set</h2>
           <p className="text-gray-500 text-sm">
             Fill in the details below and add cards to your set.
@@ -184,8 +184,8 @@ export default function Create() {
       </div>
 
       {/* Language Selection */}
-      <div className="grid grid-cols-2 gap-6">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
           <label className="block text-lg font-semibold mb-2">
             Term Language *
           </label>
@@ -255,8 +255,7 @@ export default function Create() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="flex gap-6 items-center bg-white rounded-xl p-4 border border-gray-200"
-                        >
+                          className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"                        >
                           {/* Index */}
                           <div className="w-6 text-gray-500 text-sm">
                             {index + 1}
@@ -284,7 +283,7 @@ export default function Create() {
       </div>
 
       {/* Buttons */}
-      <div className="border-t border-gray-200 pt-6 flex justify-end gap-4">
+      <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row sm:justify-end gap-4">
         <button
           onClick={addCard}
           className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"

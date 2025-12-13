@@ -39,10 +39,10 @@ const DragIcon = ({ size = 16, color = "gray" }) => (
 
 export default function Card({ card, updateCard, deleteCard, disableDelete }) {
   return (
-    <div className="relative pr-10 pt-1">
+      <div className="relative pr-0 md:pr-10 pt-1">
       {/* Drag button */}
       <button
-        className="absolute top-0 right-0 p-1 rounded-full cursor-grab hover:bg-gray-200"
+          className="absolute sm:top-0 sm:right-0 static sm:absolute p-1 rounded-full cursor-grab hover:bg-gray-200"
         title="Drag card"
       >
         <DragIcon size={16} color="#6b7280" />
@@ -50,7 +50,7 @@ export default function Card({ card, updateCard, deleteCard, disableDelete }) {
       {/* Trash Button */}
       <button
         onClick={() => !disableDelete && deleteCard(card.id)}
-        className={`absolute bottom-0 right-0 p-1 rounded-full flex items-center justify-center
+        className={`absolute sm:bottom-0 sm:right-0 static sm:absolute p-1 rounded-full flex items-center justify-center
                     ${
                       disableDelete
                         ? "bg-gray-100 cursor-not-allowed"
@@ -62,7 +62,7 @@ export default function Card({ card, updateCard, deleteCard, disableDelete }) {
       </button>
 
       {/* Inputs */}
-      <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Term */}
         <div>
           <input
