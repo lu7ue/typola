@@ -19,16 +19,19 @@ export default function App() {
         <div className="flex flex-1 overflow-hidden">
           <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-          <div className="flex-1 overflow-y-auto p-6 pt-8 bg-white">
-            <Routes>
-              <Route path="/create" element={<Create />} />
-              <Route path="/collection" element={<Collection />} />
-              <Route path="/insights" element={<Insights />} />
-              <Route path="/setting" element={<Setting />} />
-              <Route path="/importData" element={<ImportData />} />
-              <Route path="*" element={<Create />} />
-            </Routes>
+          <div className="flex-1 overflow-y-auto bg-white">
+            <div className="px-12 pt-8 pb-6">
+              <Routes>
+                <Route path="/create" element={<Create />} />
+                <Route path="/collection" element={<Collection />} />
+                <Route path="/insights" element={<Insights />} />
+                <Route path="/setting" element={<Setting />} />
+                <Route path="/importData" element={<ImportData />} />
+                <Route path="*" element={<Create />} />
+              </Routes>
+            </div>
           </div>
+
         </div>
       </div>
     </Router>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Card from "../components/Card";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useNavigate } from "react-router-dom";
+import CustomSelect from "../components/Select";
 
 export default function Create() {
   const navigate = useNavigate();
@@ -41,10 +42,9 @@ export default function Create() {
 
     if (id === 1 && (field === "term" || field === "definition")) {
       setErrors((prev) => {
-        const firstCardContent =
-          id === 1 ? (field === "term" ? value : cards[0].term) : cards[0].term;
+        const firstCardContent = field === "term" ? value : cards[0].term;
         const firstCardDef =
-          id === 1 ? (field === "definition" ? value : cards[0].definition) : cards[0].definition;
+          field === "definition" ? value : cards[0].definition;
 
         if (firstCardContent || firstCardDef) {
           return { ...prev, firstCard: "" };
@@ -71,10 +71,10 @@ export default function Create() {
       hasError = true;
     }
 
-
     const firstCard = cards[0];
     if (!firstCard.term && !firstCard.definition) {
-      newErrors.firstCard = "Please fill in at least the first card's term or definition";
+      newErrors.firstCard =
+        "Please fill in at least the first card's term or definition";
       hasError = true;
     }
 
@@ -96,10 +96,11 @@ export default function Create() {
       }
     }
 
-    // Reset form
     setTitle("");
     setDescription("");
-    setCards([{ id: 1, term: "", definition: "", image: null, isDefault: true }]);
+    setCards([
+      { id: 1, term: "", definition: "", image: null, isDefault: true },
+    ]);
     setTermLanguage("");
     setDefinitionLanguage("");
     setErrors({ title: "", termLanguage: "", definitionLanguage: "" });
@@ -108,21 +109,16 @@ export default function Create() {
   };
 
   const inputClass = (error) =>
-    `w-full p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#4f5df5] ${error ? "ring-red-500" : ""
+    `w-full p-4 border-2 rounded-lg bg-white focus:outline-none focus:border-[#7e7bf1] ${
+      error ? "border-red-400" : "border-gray-300"
     }`;
 
-  const selectClass = (error) =>
-    `w-full p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#4f5df5] ${error ? "ring-red-500" : ""
-    }`;
-
-  // drag card
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
     const reordered = Array.from(cards);
     const [removed] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, removed);
-
 
     const renumbered = reordered.map((card, index) => ({
       ...card,
@@ -133,56 +129,37 @@ export default function Create() {
   };
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-8 w-full">
       {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
       <div>
-        <h2 className="text-2xl font-semibold mb-1">Create Set</h2>
-        <p className="text-gray-500 text-sm">
-          Fill in the details below and add cards to your set.
-        </p>
-      </div>
+          <h2 className="text-2xl mb-1">Create Set</h2>
+          <p className="text-gray-500 text-sm">
+            Fill in the details below and add cards to your set.
+          </p>
+        </div>
 
-      <button
-        onClick={() => navigate("/importData")}
-        className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
-      >
-        {/* Import icon */}
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
+        <button
+          onClick={() => navigate("/importData")}
+          className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
         >
-          <path
-            d="M12 3v10m0 0l4-4m-4 4l-4-4"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        Import
-      </button>
+          Import Data
+        </button>
+      </div>
 
       {/* Title */}
       <div>
-        <label className="block mb-1 font-medium">Title</label>
-        {errors.title && <p className="text-red-500 text-sm mb-1">{errors.title}</p>}
+        <label className="block text-lg font-semibold mb-2">Title *</label>
+        {errors.title && (
+          <p className="text-red-500 text-sm mb-1">{errors.title}</p>
+        )}
         <input
           className={inputClass(errors.title)}
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
-            if (e.target.value.trim()) setErrors((prev) => ({ ...prev, title: "" }));
+            if (e.target.value.trim())
+              setErrors((prev) => ({ ...prev, title: "" }));
           }}
           placeholder="Enter title"
         />
@@ -190,9 +167,11 @@ export default function Create() {
 
       {/* Description */}
       <div>
-        <label className="block mb-1 font-medium">Description</label>
+        <label className="block text-lg font-semibold mb-2">
+          Description (optional)
+        </label>
         <textarea
-          className="w-full p-3 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#4f5df5]"
+          className={inputClass(false)}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
@@ -201,95 +180,116 @@ export default function Create() {
       </div>
 
       {/* Language Selection */}
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <label className="block mb-1 font-medium">Term Language</label>
-          <select
-            className={selectClass(errors.termLanguage)}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+          <label className="block text-lg font-semibold mb-2">
+            Term Language *
+          </label>
+        <CustomSelect
             value={termLanguage}
-            onChange={(e) => {
-              setTermLanguage(e.target.value);
-              if (e.target.value) setErrors((prev) => ({ ...prev, termLanguage: "" }));
+            onChange={(v) => {
+              setTermLanguage(v);
+              if (v) setErrors((prev) => ({ ...prev, termLanguage: "" }));
             }}
-          >
-            <option value="">-----</option>
-            <option value="en">English</option>
-            <option value="nl">Dutch</option>
-            <option value="kr">Korean</option>
-          </select>
-          {errors.termLanguage && (
-            <p className="text-red-500 text-sm mt-1">{errors.termLanguage}</p>
-          )}
-        </div>
+            placeholder="Select a language"
+            error={errors.termLanguage}
+            options={[
+              { value: "en", label: "English" },
+              { value: "nl", label: "Dutch" },
+              { value: "kr", label: "Korean" },
+            ]}
+        />
+      </div>
+
         <div>
-          <label className="block mb-1 font-medium">Definition Language</label>
-          <select
-            className={selectClass(errors.definitionLanguage)}
-            value={definitionLanguage}
-            onChange={(e) => {
-              setDefinitionLanguage(e.target.value);
-              if (e.target.value)
-                setErrors((prev) => ({ ...prev, definitionLanguage: "" }));
-            }}
-          >
-            <option value="">-----</option>
-            <option value="en">English</option>
-            <option value="nl">Dutch</option>
-            <option value="kr">Korean</option>
-          </select>
-          {errors.definitionLanguage && (
-            <p className="text-red-500 text-sm mt-1">{errors.definitionLanguage}</p>
-          )}
+          <label className="block text-lg font-semibold mb-2">
+            Definition Language *
+          </label>
+          <CustomSelect
+              value={definitionLanguage}
+              onChange={(v) => {
+                setDefinitionLanguage(v);
+                if (v) setErrors((prev) => ({ ...prev, definitionLanguage: "" }));
+              }}
+              placeholder="Select a language"
+              error={errors.definitionLanguage}
+              options={[
+                { value: "en", label: "English" },
+                { value: "nl", label: "Dutch" },
+                { value: "kr", label: "Korean" },
+              ]}
+          />
+        </div>
+
+      </div>
+
+      {/* Cards */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold">Cards</h3>
+          <span className="text-gray-500 text-sm">
+            {cards.length} card{cards.length === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        <div className="bg-gray-50 rounded-xl p-6 space-y-4">
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="cards-droppable">
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="space-y-4"
+                >
+                  {cards.map((card, index) => (
+                    <Draggable
+                      key={card.id}
+                      draggableId={String(card.id)}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"                        >
+                          {/* Index */}
+                          <div className="w-6 text-gray-500 text-sm">
+                            {index + 1}
+                          </div>
+
+                          {/* Card */}
+                          <div className="flex-1">
+                            <Card
+                              card={card}
+                              updateCard={updateCard}
+                              deleteCard={deleteCard}
+                              disableDelete={cards.length === 1}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
-
-      {/* Cards with DragDrop */}
-      <DragDropContext onDragEnd={onDragEnd}>
-  <Droppable droppableId="cards-droppable">
-    {(provided) => (
-      <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
-        {cards.map((card, index) => (
-          <Draggable
-            key={card.id}
-            draggableId={String(card.id)}
-            index={index}
-          >
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                className={`transition-shadow cursor-grab`}
-              >
-                <Card
-                  card={card}
-                  updateCard={updateCard}
-                  deleteCard={deleteCard}
-                  disableDelete={cards.length === 1}
-                />
-              </div>
-            )}
-          </Draggable>
-        ))}
-        {provided.placeholder}
-      </div>
-    )}
-  </Droppable>
-</DragDropContext>
-
-
 
       {/* Buttons */}
-      <div className="flex gap-4 mt-6">
+      <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row sm:justify-end gap-4">
         <button
           onClick={addCard}
-          className="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+          className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
         >
           Add Card
         </button>
         <button
           onClick={handleCreateSet}
-          className="px-6 py-2 bg-[#4f5df5] text-white rounded-lg hover:opacity-90 transition"
+          className="px-5 py-2 rounded-full bg-[#7e7bf1] text-white hover:opacity-90"
         >
           Create Set
         </button>
