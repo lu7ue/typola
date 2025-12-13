@@ -132,7 +132,7 @@ export default function Create() {
     <div className="space-y-8 w-full">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-      <div>
+        <div>
           <h2 className="text-2xl mb-1">Create Set</h2>
           <p className="text-gray-500 text-sm">
             Fill in the details below and add cards to your set.
@@ -181,11 +181,11 @@ export default function Create() {
 
       {/* Language Selection */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
+        <div>
           <label className="block text-lg font-semibold mb-2">
             Term Language *
           </label>
-        <CustomSelect
+          <CustomSelect
             value={termLanguage}
             onChange={(v) => {
               setTermLanguage(v);
@@ -198,29 +198,28 @@ export default function Create() {
               { value: "nl", label: "Dutch" },
               { value: "kr", label: "Korean" },
             ]}
-        />
-      </div>
+          />
+        </div>
 
         <div>
           <label className="block text-lg font-semibold mb-2">
             Definition Language *
           </label>
           <CustomSelect
-              value={definitionLanguage}
-              onChange={(v) => {
-                setDefinitionLanguage(v);
-                if (v) setErrors((prev) => ({ ...prev, definitionLanguage: "" }));
-              }}
-              placeholder="Select a language"
-              error={errors.definitionLanguage}
-              options={[
-                { value: "en", label: "English" },
-                { value: "nl", label: "Dutch" },
-                { value: "kr", label: "Korean" },
-              ]}
+            value={definitionLanguage}
+            onChange={(v) => {
+              setDefinitionLanguage(v);
+              if (v) setErrors((prev) => ({ ...prev, definitionLanguage: "" }));
+            }}
+            placeholder="Select a language"
+            error={errors.definitionLanguage}
+            options={[
+              { value: "en", label: "English" },
+              { value: "nl", label: "Dutch" },
+              { value: "kr", label: "Korean" },
+            ]}
           />
         </div>
-
       </div>
 
       {/* Cards */}
@@ -252,7 +251,8 @@ export default function Create() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"                        >
+                          className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"
+                        >
                           {/* Index */}
                           <div className="w-6 text-gray-500 text-sm">
                             {index + 1}

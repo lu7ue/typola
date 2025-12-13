@@ -69,37 +69,37 @@ const SettingIcon = ({ size = 24 }) => (
 );
 
 const BarChevronLeft = ({ size = 24 }) => (
-    <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-    >
-      <path d="M5 5v14" />
-      <path d="M17 18l-6-6 6-6" />
-    </svg>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M5 5v14" />
+    <path d="M17 18l-6-6 6-6" />
+  </svg>
 );
 
 const ChevronRightBar = ({ size = 24 }) => (
-    <svg
-        width={size}
-        height={size}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-    >
-      <path d="M7 18l6-6-6-6" />
-      <path d="M19 5v14" />
-    </svg>
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M7 18l6-6-6-6" />
+    <path d="M19 5v14" />
+  </svg>
 );
 
 const menuItems = [
@@ -120,10 +120,14 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       <div className="flex items-center justify-between px-2 mb-4">
         {!collapsed && <h1 className="text-xl font-bold italic"></h1>}
         <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="text-gray-700 hover:text-black focus:outline-none"
+          onClick={() => setCollapsed(!collapsed)}
+          className="text-gray-700 hover:text-black focus:outline-none"
         >
-          {collapsed ? <ChevronRightBar size={24} /> : <BarChevronLeft size={24} />}
+          {collapsed ? (
+            <ChevronRightBar size={24} />
+          ) : (
+            <BarChevronLeft size={24} />
+          )}
         </button>
       </div>
 
@@ -136,7 +140,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                 to={item.path}
                 className={({ isActive }) =>
                   `flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                    isActive ? "bg-[#7e7bf1] text-black" : "text-gray-700 hover:bg-gray-100"
+                    isActive
+                      ? "bg-[#7e7bf1] text-black"
+                      : "text-gray-700 hover:bg-gray-100"
                   }`
                 }
               >
@@ -153,7 +159,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         className={`mt-auto ${collapsed ? "" : "border-t border-gray-200"} h-5 flex items-center justify-center`}
       >
         {!collapsed && (
-          <span className="text-sm text-gray-500 leading-none mt-3">Footer Placeholder</span>
+          <span className="text-sm text-gray-500 leading-none mt-3">
+            Footer Placeholder
+          </span>
         )}
       </div>
     </div>

@@ -73,7 +73,7 @@ export default function ImportData() {
 
       {/* Options */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-      {/* Between Term and Definition */}
+        {/* Between Term and Definition */}
         <div className="space-y-5">
           <h3 className="text-lg font-semibold">Between Term and Definition</h3>
 
@@ -183,13 +183,14 @@ export default function ImportData() {
               {cards.map((card, index) => (
                 <div
                   key={index}
-                  className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"                >
+                  className="flex flex-col md:flex-row gap-4 bg-white rounded-xl p-4 border border-gray-200"
+                >
                   {/* Index */}
                   <div className="w-6 text-gray-500 text-sm">{index + 1}</div>
 
                   {/* Card */}
                   <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
+                    <div>
                       <div className="bg-gray-50 rounded-lg p-3 text-gray-700 min-h-[52px] flex items-center border border-gray-100">
                         {card.term}
                       </div>
