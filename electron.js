@@ -17,11 +17,28 @@ function createWindow() {
   });
 
 
+  const sendMaximizeState = () => {
+    if (!win || win.isDestroyed()) return;
+    win.webContents.send("win:maximized-changed", win.isMaximized());
+  };
+
   ipcMain.handle("win:minimize", () => win.minimize());
-  ipcMain.handle("win:maximize", () =>
-    win.isMaximized() ? win.unmaximize() : win.maximize()
-  );
+
+  ipcMain.handle("win:isMaximized", () => win.isMaximized());
+
+  ipcMain.handle("win:maximize", () => {
+    win.isMaximized() ? win.unmaximize() : win.maximize();
+    sendMaximizeState();
+  });
+
   ipcMain.handle("win:close", () => win.close());
+
+  win.on("maximize", sendMaximizeState);
+  win.on("unmaximize", sendMaximizeState);
+  win.on("restore", sendMaximizeState);
+  win.on("enter-full-screen", sendMaximizeState);
+  win.on("leave-full-screen", sendMaximizeState);
+
 
   Menu.setApplicationMenu(null);
 

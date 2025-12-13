@@ -4,7 +4,15 @@ contextBridge.exposeInMainWorld("backend", {
   getAllWords: () => ipcRenderer.invoke("db:getAllWords"),
   createSet: (set) => ipcRenderer.invoke("db:createSet", set),
   createCard: (card) => ipcRenderer.invoke("db:createCard", card),
+
   minimize: () => ipcRenderer.invoke("win:minimize"),
   maximize: () => ipcRenderer.invoke("win:maximize"),
   close: () => ipcRenderer.invoke("win:close"),
+
+  getIsMaximized: () => ipcRenderer.invoke("win:isMaximized"),
+  onMaximizedChanged: (callback) => {
+    const handler = (_event, isMaximized) => callback(isMaximized);
+    ipcRenderer.on("win:maximized-changed", handler);
+    return () => ipcRenderer.removeListener("win:maximized-changed", handler);
+  },
 });
