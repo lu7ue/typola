@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 
 export default function TitleBar() {
+  const isMac = window.backend?.platform === "darwin";  
   const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
+    if (isMac) return;
     let cleanup = null;
 
     (async () => {
@@ -15,7 +17,9 @@ export default function TitleBar() {
     return () => {
       if (cleanup) cleanup();
     };
-  }, []);
+  }, [isMac]);
+
+  if (isMac) return null;
 
   return (
     <div

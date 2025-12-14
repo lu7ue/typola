@@ -1,42 +1,39 @@
 const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const path = require("path");
-const Database = require("better-sqlite3");
-const cardController = require("./src/backend/controllers/cardController");
+
+const { db, sqlite } = require("./src/backend/db/index.js");
+const { runMigrations } = require("./src/backend/db/migrate.js");
+const cardController = require("./src/backend/controllers/cardController.js");
 
 let win;
-let db;
 
 function createWindow() {
+  const isMac = process.platform === "darwin";
+
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    frame: false,
+    frame: !isMac ? false : true,
+    titleBarStyle: isMac ? "default" : undefined,
     webPreferences: {
       preload: path.join(__dirname, "src/backend/preload.js"),
     },
   });
 
-  const sendMaximizeState = () => {
-    if (!win || win.isDestroyed()) return;
-    win.webContents.send("win:maximized-changed", win.isMaximized());
-  };
-
-  ipcMain.handle("win:minimize", () => win.minimize());
-
-  ipcMain.handle("win:isMaximized", () => win.isMaximized());
-
+  // Window controls handlers
+  ipcMain.handle("win:minimize", () => win?.minimize());
   ipcMain.handle("win:maximize", () => {
+    if (!win) return;
     win.isMaximized() ? win.unmaximize() : win.maximize();
-    sendMaximizeState();
+    win.webContents.send("win:maximized-changed", win.isMaximized());
   });
+  ipcMain.handle("win:close", () => win?.close());
+  ipcMain.handle("win:isMaximized", () => win?.isMaximized() || false);
 
-  ipcMain.handle("win:close", () => win.close());
-
-  win.on("maximize", sendMaximizeState);
-  win.on("unmaximize", sendMaximizeState);
-  win.on("restore", sendMaximizeState);
-  win.on("enter-full-screen", sendMaximizeState);
-  win.on("leave-full-screen", sendMaximizeState);
+  win.on("maximize", () => win.webContents.send("win:maximized-changed", true));
+  win.on("unmaximize", () =>
+    win.webContents.send("win:maximized-changed", false)
+  );
 
   Menu.setApplicationMenu(null);
 
@@ -44,39 +41,10 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  db = new Database(path.join(__dirname, "src/db.sqlite"));
+  runMigrations();
 
-  cardController.setDB(db);
+  cardController.setDB(sqlite);
 
-  db.prepare(`DROP TABLE IF EXISTS cards`).run();
-  db.prepare(`DROP TABLE IF EXISTS sets`).run();
-
-  db.prepare(
-    `
-    CREATE TABLE IF NOT EXISTS sets (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      description TEXT
-    )
-  `
-  ).run();
-
-  db.prepare(
-    `
-    CREATE TABLE IF NOT EXISTS cards (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      set_id INTEGER NOT NULL,
-      term TEXT NOT NULL,
-      definition TEXT NOT NULL,
-      term_language TEXT NOT NULL,
-      definition_language TEXT NOT NULL,
-      image TEXT,
-      FOREIGN KEY (set_id) REFERENCES sets(id) ON DELETE CASCADE
-    )
-  `
-  ).run();
-
-  // ipcMain handle
   ipcMain.handle("db:createSet", (event, set) =>
     cardController.createSet(set.title, set.description)
   );
@@ -85,13 +53,9 @@ app.whenReady().then(() => {
     cardController.createCard(card)
   );
 
-  ipcMain.handle("db:getAllWords", () => {
-    const rows = db.prepare("SELECT * FROM words").all();
-    return rows;
-  });
-
   createWindow();
 });
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();

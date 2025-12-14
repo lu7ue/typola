@@ -1,42 +1,39 @@
-let db;
+const { db } = require("../db/index");
+const { sets, cards } = require("../db/schema");
 
-const setDB = (database) => {
-  db = database;
+const setDB = (_database) => {
 };
 
-const createSet = (title, description) => {
-  const result = db
-    .prepare(
-      `
-    INSERT INTO sets (title, description) VALUES (?, ?)
-`
-    )
-    .run(title, description);
+/**
+ * create new Set
+ * @param {string} title
+ * @param {string} description
+ * @returns {number}
+ */
+const createSet = async (title, description) => {
+  const result = await db.insert(sets).values({ title, description }).run();
   return result.lastInsertRowid;
 };
 
-const createCard = (card) => {
-  const result = db
-    .prepare(
-      `
-    INSERT INTO cards 
-    (set_id, term, definition, term_language, definition_language, image)
-    VALUES (?, ?, ?, ?, ?, ?)
-`
-    )
-    .run(
-      card.set_id,
-      card.term,
-      card.definition,
-      card.term_language,
-      card.definition_language,
-      card.image || null
-    );
+/**
+ * create new card
+ * @param {object} card
+ * @returns {number}
+ */
+const createCard = async (card) => {
+  const result = await db
+    .insert(cards)
+    .values({
+      setId: card.set_id,
+      term: card.term,
+      definition: card.definition,
+      termLanguage: card.term_language,
+      definitionLanguage: card.definition_language,
+      audio: card.audio || null,
+    })
+    .run();
+
   return result.lastInsertRowid;
 };
 
-module.exports = {
-  setDB,
-  createSet,
-  createCard,
-};
+module.exports = { setDB, createSet, createCard };

@@ -1,112 +1,12 @@
 // SVG icon components
 import { NavLink } from "react-router-dom";
-const CreateIcon = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M12 5v14" />
-    <path d="M5 12h14" />
-  </svg>
-);
-
-const CollectionIcon = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="3" width="7" height="7" />
-    <rect x="14" y="3" width="7" height="7" />
-    <rect x="3" y="14" width="7" height="7" />
-    <rect x="14" y="14" width="7" height="7" />
-  </svg>
-);
-
-const InsightsIcon = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 3v18h18" />
-    <path d="M7 15v3" />
-    <path d="M12 9v9" />
-    <path d="M17 5v13" />
-  </svg>
-);
-
-const SettingIcon = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .7.4 1.34 1.02 1.64.31.15.65.23.98.23H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-  </svg>
-);
-
-const BarChevronLeft = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M5 5v14" />
-    <path d="M17 18l-6-6 6-6" />
-  </svg>
-);
-
-const ChevronRightBar = ({ size = 24 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M7 18l6-6-6-6" />
-    <path d="M19 5v14" />
-  </svg>
-);
+import { Icons } from "../icons";
 
 const menuItems = [
-  { name: "Create", Icon: CreateIcon, path: "/create" },
-  { name: "Collection", Icon: CollectionIcon, path: "/collection" },
-  { name: "Insights", Icon: InsightsIcon, path: "/insights" },
-  { name: "Setting", Icon: SettingIcon, path: "/setting" },
+  { name: "Create", Icon: Icons.Create, path: "/create" },
+  { name: "Collection", Icon: Icons.Collection, path: "/collection" },
+  { name: "Insights", Icon: Icons.Insights, path: "/insights" },
+  { name: "Setting", Icon: Icons.Setting, path: "/setting" },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
@@ -124,9 +24,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           className="text-gray-700 hover:text-black focus:outline-none"
         >
           {collapsed ? (
-            <ChevronRightBar size={24} />
+            <Icons.ChevronRightBar/>
           ) : (
-            <BarChevronLeft size={24} />
+            <Icons.BarChevronLeft/>
           )}
         </button>
       </div>
