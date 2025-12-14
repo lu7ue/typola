@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import TitleBar from "./components/TitleBar";
@@ -10,14 +10,31 @@ import ImportData from "./pages/ImportData";
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
-  const isMac = window.backend?.platform === "darwin";
 
+  const [isMac, setIsMac] = useState(() => {
+    if (typeof window !== "undefined" && window.backend) {
+      return window.backend.platform === "darwin";
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (!window.backend) return;
+
+    const id = setTimeout(() => {
+      setIsMac(window.backend.platform === "darwin");
+    }, 0);
+
+    return () => clearTimeout(id);
+  }, []);
+
+  if (isMac === null) return null;
 
   return (
     <Router>
-      <div className="flex h-screen">
-        {/* windows */}
+      <div className="flex flex-col h-screen">
         {!isMac && <TitleBar />}
+
         <div className="flex flex-1 overflow-hidden">
           <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
