@@ -17,4 +17,3 @@ contextBridge.exposeInMainWorld("backend", {
     return () => ipcRenderer.removeListener("win:maximized-changed", handler);
   },
 });
- 

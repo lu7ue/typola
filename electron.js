@@ -12,7 +12,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-      frame: !isMac ? false : true,
+    frame: !isMac ? false : true,
     titleBarStyle: isMac ? "default" : undefined,
     webPreferences: {
       preload: path.join(__dirname, "src/backend/preload.js"),
