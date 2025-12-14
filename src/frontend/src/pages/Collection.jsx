@@ -1,6 +1,6 @@
 export default function Collection() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-8 w-full">
       <h2 className="text-2xl mb-4">Collection Page</h2>
       <p>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi pariatur
