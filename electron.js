@@ -6,41 +6,39 @@ const cardController = require("./src/backend/controllers/cardController");
 let win;
 let db;
 
-
 function createWindow() {
   const isMac = process.platform === "darwin";
 
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-
-    frame: !isMac,
+      frame: !isMac ? false : true,
     titleBarStyle: isMac ? "default" : undefined,
-
     webPreferences: {
       preload: path.join(__dirname, "src/backend/preload.js"),
     },
   });
 
-  //Window controls
-  ipcMain.handle("win:minimize", () => {
-    if (!isMac) win.minimize();
-  });
-
+  // Window controls handlers
+  ipcMain.handle("win:minimize", () => win?.minimize());
   ipcMain.handle("win:maximize", () => {
-    if (!isMac) {
-      win.isMaximized() ? win.unmaximize() : win.maximize();
-    }
+    if (!win) return;
+    win.isMaximized() ? win.unmaximize() : win.maximize();
+    win.webContents.send("win:maximized-changed", win.isMaximized());
   });
+  ipcMain.handle("win:close", () => win?.close());
+  ipcMain.handle("win:isMaximized", () => win?.isMaximized() || false);
 
-  ipcMain.handle("win:close", () => {
-    if (!isMac) win.close();
-  });
+  win.on("maximize", () => win.webContents.send("win:maximized-changed", true));
+  win.on("unmaximize", () =>
+    win.webContents.send("win:maximized-changed", false)
+  );
 
   Menu.setApplicationMenu(null);
 
   win.loadURL("http://localhost:5173");
 }
+
 
 app.whenReady().then(() => {
   db = new Database(path.join(__dirname, "src/db.sqlite"));
