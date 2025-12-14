@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld("backend", {
   createSet: (set) => ipcRenderer.invoke("db:createSet", set),
   createCard: (card) => ipcRenderer.invoke("db:createCard", card),
 
+  platform: process.platform,
   minimize: () => ipcRenderer.invoke("win:minimize"),
   maximize: () => ipcRenderer.invoke("win:maximize"),
   close: () => ipcRenderer.invoke("win:close"),

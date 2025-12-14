@@ -10,12 +10,31 @@ import ImportData from "./pages/ImportData";
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
+  const isMac = window.backend?.platform === "darwin";
+
 
   return (
     <Router>
-      <div className="h-screen flex flex-col overflow-hidden">
-        <TitleBar />
+  {/* mac */}
+  {isMac && (
+    <div
+      style={{
+        height: "36px", 
+        WebkitAppRegion: "drag",
+        backgroundColor: "#f9fafb", 
+        zIndex: 50,
+      }}
+    />
+  )}
 
+  <div
+    className="flex flex-col overflow-hidden"
+    style={{
+      height: isMac ? "calc(100vh - 28px)" : "100vh",
+    }}
+  >
+    {/* windows */}
+    {!isMac && <TitleBar />}
         <div className="flex flex-1 overflow-hidden">
           <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 

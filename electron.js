@@ -6,37 +6,36 @@ const cardController = require("./src/backend/controllers/cardController");
 let win;
 let db;
 
+
 function createWindow() {
+  const isMac = process.platform === "darwin";
+
   win = new BrowserWindow({
     width: 1200,
     height: 800,
-    frame: false,
+
+    frame: !isMac,
+    titleBarStyle: isMac ? "default" : undefined,
+
     webPreferences: {
       preload: path.join(__dirname, "src/backend/preload.js"),
     },
   });
 
-  const sendMaximizeState = () => {
-    if (!win || win.isDestroyed()) return;
-    win.webContents.send("win:maximized-changed", win.isMaximized());
-  };
-
-  ipcMain.handle("win:minimize", () => win.minimize());
-
-  ipcMain.handle("win:isMaximized", () => win.isMaximized());
-
-  ipcMain.handle("win:maximize", () => {
-    win.isMaximized() ? win.unmaximize() : win.maximize();
-    sendMaximizeState();
+  //Window controls
+  ipcMain.handle("win:minimize", () => {
+    if (!isMac) win.minimize();
   });
 
-  ipcMain.handle("win:close", () => win.close());
+  ipcMain.handle("win:maximize", () => {
+    if (!isMac) {
+      win.isMaximized() ? win.unmaximize() : win.maximize();
+    }
+  });
 
-  win.on("maximize", sendMaximizeState);
-  win.on("unmaximize", sendMaximizeState);
-  win.on("restore", sendMaximizeState);
-  win.on("enter-full-screen", sendMaximizeState);
-  win.on("leave-full-screen", sendMaximizeState);
+  ipcMain.handle("win:close", () => {
+    if (!isMac) win.close();
+  });
 
   Menu.setApplicationMenu(null);
 
