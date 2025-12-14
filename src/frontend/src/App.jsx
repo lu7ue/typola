@@ -15,26 +15,9 @@ export default function App() {
 
   return (
     <Router>
-  {/* mac */}
-  {isMac && (
-    <div
-      style={{
-        height: "36px", 
-        WebkitAppRegion: "drag",
-        backgroundColor: "#f9fafb", 
-        zIndex: 50,
-      }}
-    />
-  )}
-
-  <div
-    className="flex flex-col overflow-hidden"
-    style={{
-      height: isMac ? "calc(100vh - 28px)" : "100vh",
-    }}
-  >
-    {/* windows */}
-    {!isMac && <TitleBar />}
+      <div className="flex flex-col overflow-hidden">
+        {/* windows */}
+        {!isMac && <TitleBar />}
         <div className="flex flex-1 overflow-hidden">
           <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
 
