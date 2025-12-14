@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import TitleBar from "./components/TitleBar";
 import Create from "./pages/Create";
@@ -41,12 +42,12 @@ export default function App() {
           <div className="flex-1 overflow-y-auto bg-white">
             <div className="px-12 pt-8 pb-6">
               <Routes>
+                <Route path="/" element={<Navigate to="/create" replace />} />
                 <Route path="/create" element={<Create />} />
                 <Route path="/collection" element={<Collection />} />
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/setting" element={<Setting />} />
                 <Route path="/importData" element={<ImportData />} />
-                <Route path="*" element={<Create />} />
               </Routes>
             </div>
           </div>

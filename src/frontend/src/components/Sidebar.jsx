@@ -1,15 +1,16 @@
-// SVG icon components
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Icons } from "../icons";
 
 const menuItems = [
-  { name: "Create", Icon: Icons.Create, path: "/create" },
-  { name: "Collection", Icon: Icons.Collection, path: "/collection" },
-  { name: "Insights", Icon: Icons.Insights, path: "/insights" },
-  { name: "Setting", Icon: Icons.Setting, path: "/setting" },
+  { name: "Create", Icon: Icons.Create, path: "/create", activePaths: ["/create", "/importData"] },
+  { name: "Collection", Icon: Icons.Collection, path: "/collection", activePaths: ["/collection"] },
+  { name: "Insights", Icon: Icons.Insights, path: "/insights", activePaths: ["/insights"] },
+  { name: "Setting", Icon: Icons.Setting, path: "/setting", activePaths: ["/setting"] },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
+  const location = useLocation();
+
   return (
     <div
       className={`bg-white text-black flex flex-col transition-all duration-300 border-r-2 border-gray-200 ${
@@ -23,34 +24,32 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           onClick={() => setCollapsed(!collapsed)}
           className="text-gray-700 hover:text-black focus:outline-none"
         >
-          {collapsed ? (
-            <Icons.ChevronRightBar/>
-          ) : (
-            <Icons.BarChevronLeft/>
-          )}
+          {collapsed ? <Icons.ChevronRightBar /> : <Icons.BarChevronLeft />}
         </button>
       </div>
 
       {/* Navigation menu */}
       <nav className="flex-1">
         <ul>
-          {menuItems.map((item) => (
-            <li key={item.name} className="mb-2">
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
+          {menuItems.map((item) => {
+            const isActive = item.activePaths.includes(location.pathname);
+
+            return (
+              <li key={item.name} className="mb-2">
+                <NavLink
+                  to={item.path}
+                  className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
                     isActive
                       ? "bg-[#7e7bf1] text-black"
                       : "text-gray-700 hover:bg-gray-100"
-                  }`
-                }
-              >
-                <item.Icon />
-                {!collapsed && <span>{item.name}</span>}
-              </NavLink>
-            </li>
-          ))}
+                  }`}
+                >
+                  <item.Icon />
+                  {!collapsed && <span>{item.name}</span>}
+                </NavLink>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
