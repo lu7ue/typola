@@ -15,7 +15,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="flex flex-col overflow-hidden">
+      <div className="flex h-screen">
         {/* windows */}
         {!isMac && <TitleBar />}
         <div className="flex flex-1 overflow-hidden">
