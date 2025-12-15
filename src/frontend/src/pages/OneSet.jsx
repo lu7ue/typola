@@ -71,7 +71,7 @@ export default function OneSet() {
           },
           {
             label: "Practice Mode",
-            hint: "Type what you memoried when parts are hidden.",
+            hint: "Recall and type the hidden parts.",
           },
           {
             label: "Exam Mode",
