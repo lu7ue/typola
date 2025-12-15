@@ -1,66 +1,70 @@
-const { app, BrowserWindow, ipcMain, Menu } = require("electron");
+const {app, BrowserWindow, ipcMain, Menu} = require("electron");
 const path = require("path");
 
-const { db, sqlite } = require("./src/backend/db/index.js");
-const { runMigrations } = require("./src/backend/db/migrate.js");
+const {db, sqlite} = require("./src/backend/db/index.js");
+const {runMigrations} = require("./src/backend/db/migrate.js");
 const cardController = require("./src/backend/controllers/cardController.js");
 
 let win;
 
 function createWindow() {
-  const isMac = process.platform === "darwin";
+    const isMac = process.platform === "darwin";
 
-  win = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    frame: !isMac ? false : true,
-    titleBarStyle: isMac ? "default" : undefined,
-    webPreferences: {
-      preload: path.join(__dirname, "src/backend/preload.js"),
-    },
-  });
+    win = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        frame: !isMac ? false : true,
+        titleBarStyle: isMac ? "default" : undefined,
+        webPreferences: {
+            preload: path.join(__dirname, "src/backend/preload.js"),
+        },
+    });
 
-  // Window controls handlers
-  ipcMain.handle("win:minimize", () => win?.minimize());
-  ipcMain.handle("win:maximize", () => {
-    if (!win) return;
-    win.isMaximized() ? win.unmaximize() : win.maximize();
-    win.webContents.send("win:maximized-changed", win.isMaximized());
-  });
-  ipcMain.handle("win:close", () => win?.close());
-  ipcMain.handle("win:isMaximized", () => win?.isMaximized() || false);
+    // Window controls handlers
+    ipcMain.handle("win:minimize", () => win?.minimize());
+    ipcMain.handle("win:maximize", () => {
+        if (!win) return;
+        win.isMaximized() ? win.unmaximize() : win.maximize();
+        win.webContents.send("win:maximized-changed", win.isMaximized());
+    });
+    ipcMain.handle("win:close", () => win?.close());
+    ipcMain.handle("win:isMaximized", () => win?.isMaximized() || false);
 
-  win.on("maximize", () => win.webContents.send("win:maximized-changed", true));
-  win.on("unmaximize", () =>
-    win.webContents.send("win:maximized-changed", false)
-  );
+    win.on("maximize", () => win.webContents.send("win:maximized-changed", true));
+    win.on("unmaximize", () =>
+        win.webContents.send("win:maximized-changed", false)
+    );
 
-  Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
 
-  win.loadURL("http://localhost:5173");
+    win.loadURL("http://localhost:5173");
 }
 
 app.whenReady().then(() => {
-  runMigrations();
+    runMigrations();
 
-  cardController.setDB(sqlite);
+    cardController.setDB(sqlite);
 
-  ipcMain.handle("db:createSet", (event, set) =>
-    cardController.createSet(set.title, set.description)
-  );
+    ipcMain.handle("db:createSet", (event, set) =>
+        cardController.createSet(set.title, set.description)
+    );
 
-  ipcMain.handle("db:createCard", (event, card) =>
-    cardController.createCard(card)
-  );
+    ipcMain.handle("db:createCard", (event, card) =>
+        cardController.createCard(card)
+    );
 
-  createWindow();
+    ipcMain.handle("db:getAllSets", () =>
+        cardController.getAllSets()
+    );
+
+    createWindow();
 });
 
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+    if (process.platform !== "darwin") app.quit();
 });
 
 app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });

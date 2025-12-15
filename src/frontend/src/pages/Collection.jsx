@@ -1,46 +1,91 @@
+import { useEffect, useState } from "react";
+import { Icons } from "../icons";
+
 export default function Collection() {
+  const [sets, setSets] = useState([]);
+  const [openMenuId, setOpenMenuId] = useState(null);
+
+  useEffect(() => {
+    window.backend.getAllSets().then(setSets);
+  }, []);
+
+  const truncate = (text, max = 80) => {
+    if (!text) return "";
+    return text.length > max ? text.slice(0, max) + "..." : text;
+  };
+
   return (
     <div className="space-y-8 w-full">
-      <h2 className="text-2xl mb-4">Collection Page</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi pariatur
-        aliquam reprehenderit repellat eius corrupti quisquam, itaque dicta odio
-        temporibus? Id soluta doloribus perferendis quo voluptatem! Earum
-        possimus fugit iusto a iste vero sit error alias, quos nesciunt velit,
-        praesentium temporibus quasi blanditiis excepturi in pariatur
-        doloremque. Ex expedita, debitis aspernatur accusantium laborum itaque
-        inventore tenetur reprehenderit voluptates, totam aperiam provident
-        numquam, sint a? Reprehenderit possimus repudiandae sed vero ea ratione!
-        Dicta, blanditiis veniam sunt sed voluptas est sequi delectus facilis
-        quod cum sint, at cupiditate maxime tempora alias ab neque suscipit
-        ullam assumenda! Labore modi doloremque unde non!
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi pariatur
-        aliquam reprehenderit repellat eius corrupti quisquam, itaque dicta odio
-        temporibus? Id soluta doloribus perferendis quo voluptatem! Earum
-        possimus fugit iusto a iste vero sit error alias, quos nesciunt velit,
-        praesentium temporibus quasi blanditiis excepturi in pariatur
-        doloremque. Ex expedita, debitis aspernatur accusantium laborum itaque
-        inventore tenetur reprehenderit voluptates, totam aperiam provident
-        numquam, sint a? Reprehenderit possimus repudiandae sed vero ea ratione!
-        Dicta, blanditiis veniam sunt sed voluptas est sequi delectus facilis
-        quod cum sint, at cupiditate maxime tempora alias ab neque suscipit
-        ullam assumenda! Labore modi doloremque unde non!
-      </p>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi pariatur
-        aliquam reprehenderit repellat eius corrupti quisquam, itaque dicta odio
-        temporibus? Id soluta doloribus perferendis quo voluptatem! Earum
-        possimus fugit iusto a iste vero sit error alias, quos nesciunt velit,
-        praesentium temporibus quasi blanditiis excepturi in pariatur
-        doloremque. Ex expedita, debitis aspernatur accusantium laborum itaque
-        inventore tenetur reprehenderit voluptates, totam aperiam provident
-        numquam, sint a? Reprehenderit possimus repudiandae sed vero ea ratione!
-        Dicta, blanditiis veniam sunt sed voluptas est sequi delectus facilis
-        quod cum sint, at cupiditate maxime tempora alias ab neque suscipit
-        ullam assumenda! Labore modi doloremque unde non!
-      </p>
+      {/* Header */}
+      <div>
+        <h2 className="text-2xl mb-1">Collection</h2>
+      </div>
+
+      <div className="space-y-4">
+        {sets.map((set) => (
+          <div
+            key={set.id}
+            className="bg-gray-100 rounded-xl p-3 cursor-pointer"
+          >
+            <div className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-start justify-between gap-4">
+              {/* Left */}
+              <div className="flex items-start gap-4 min-w-0">
+                {/* Progress */}
+                <div className="w-14 h-14 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center font-semibold text-black shrink-0 mt-1">
+                  0%
+                </div>
+
+                {/* Text */}
+                <div className="flex flex-col justify-between h-full min-w-0">
+                  {/* Title + count */}
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-1 min-w-0">
+                    <div className="font-semibold text-black truncate">
+                      {set.title}
+                    </div>
+                    <div className="text-sm text-gray-600 whitespace-nowrap">
+                      {set.cardCount} cards
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  {set.description && (
+                    <div className="text-sm text-gray-500 line-clamp-2">
+                      {set.description}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right menu */}
+              <div className="relative">
+                <button
+                  onClick={() =>
+                    setOpenMenuId(openMenuId === set.id ? null : set.id)
+                  }
+                  className="p-2 rounded-full hover:bg-gray-100"
+                >
+                  <Icons.MoreVertical />
+                </button>
+
+                {openMenuId === set.id && (
+                  <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-20">
+                    <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
+                      Export this set
+                    </button>
+                    <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {sets.length === 0 && (
+          <p className="text-gray-400 text-sm">No sets yet.</p>
+        )}
+      </div>
     </div>
   );
 }
