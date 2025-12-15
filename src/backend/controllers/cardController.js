@@ -57,4 +57,37 @@ const getAllSets = async () => {
     return rows;
 };
 
-module.exports = {setDB, createSet, createCard, getAllSets};
+/**
+ * get single set with all cards
+ * @param {number} id
+ * @returns {object}
+ */
+const getSetById = async (id) => {
+    const set = sqlite
+        .prepare(`
+            SELECT id, title, description
+            FROM sets
+            WHERE id = ?
+        `)
+        .get(id);
+
+    if (!set) return null;
+
+    const cards = sqlite
+        .prepare(`
+            SELECT id, term, definition, term_language, definition_language, audio
+            FROM cards
+            WHERE set_id = ?
+            ORDER BY id ASC
+        `)
+        .all(id);
+
+    return {
+        ...set,
+        cardCount: cards.length,
+        cards,
+    };
+};
+
+module.exports = {setDB, createSet, createCard, getAllSets, getSetById};
+

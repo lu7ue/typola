@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Navigate, Route, Routes, } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import TitleBar from "./components/TitleBar";
 import Create from "./pages/Create";
@@ -8,6 +7,7 @@ import Collection from "./pages/Collection";
 import Insights from "./pages/Insights";
 import Setting from "./pages/Setting";
 import ImportData from "./pages/ImportData";
+import OneSet from "./pages/OneSet";
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -48,6 +48,7 @@ export default function App() {
                 <Route path="/insights" element={<Insights />} />
                 <Route path="/setting" element={<Setting />} />
                 <Route path="/importData" element={<ImportData />} />
+                <Route path="/set/:setId" element={<OneSet />} />
               </Routes>
             </div>
           </div>

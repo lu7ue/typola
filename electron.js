@@ -57,6 +57,10 @@ app.whenReady().then(() => {
         cardController.getAllSets()
     );
 
+    ipcMain.handle("db:getSetById", (event, id) =>
+        cardController.getSetById(id)
+    );
+
     createWindow();
 });
 

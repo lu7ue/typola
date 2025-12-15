@@ -1,13 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icons } from "../icons";
+import { useNavigate } from "react-router-dom";
 
 export default function Collection() {
   const [sets, setSets] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.backend.getAllSets().then(setSets);
   }, []);
+
+  useEffect(() => {
+    const onPointerDown = (e) => {
+      if (!openMenuId) return;
+      if (menuRef.current && menuRef.current.contains(e.target)) return;
+      setOpenMenuId(null);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [openMenuId]);
 
   const truncate = (text, max = 80) => {
     if (!text) return "";
@@ -25,7 +39,8 @@ export default function Collection() {
         {sets.map((set) => (
           <div
             key={set.id}
-            className="bg-gray-100 rounded-xl p-3 cursor-pointer"
+            onClick={() => navigate(`/set/${set.id}`)}
+            className="bg-gray-100 rounded-xl p-3 cursor-pointer transition-transform duration-200 hover:scale-[1.015]"
           >
             <div className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-start justify-between gap-4">
               {/* Left */}
@@ -57,11 +72,12 @@ export default function Collection() {
               </div>
 
               {/* Right menu */}
-              <div className="relative">
+              <div className="relative" ref={menuRef}>
                 <button
-                  onClick={() =>
-                    setOpenMenuId(openMenuId === set.id ? null : set.id)
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenuId(openMenuId === set.id ? null : set.id);
+                  }}
                   className="p-2 rounded-full hover:bg-gray-100"
                 >
                   <Icons.MoreVertical />

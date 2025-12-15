@@ -2,10 +2,31 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Icons } from "../icons";
 
 const menuItems = [
-  { name: "Create", Icon: Icons.Create, path: "/create", activePaths: ["/create", "/importData"] },
-  { name: "Collection", Icon: Icons.Collection, path: "/collection", activePaths: ["/collection"] },
-  { name: "Insights", Icon: Icons.Insights, path: "/insights", activePaths: ["/insights"] },
-  { name: "Setting", Icon: Icons.Setting, path: "/setting", activePaths: ["/setting"] },
+  {
+    name: "Create",
+    Icon: Icons.Create,
+    path: "/create",
+    activePaths: ["/create", "/importData"],
+  },
+  {
+    name: "Collection",
+    Icon: Icons.Collection,
+    path: "/collection",
+    activePaths: ["/collection", "/set"],
+  },
+
+  {
+    name: "Insights",
+    Icon: Icons.Insights,
+    path: "/insights",
+    activePaths: ["/insights"],
+  },
+  {
+    name: "Setting",
+    Icon: Icons.Setting,
+    path: "/setting",
+    activePaths: ["/setting"],
+  },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
@@ -32,7 +53,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       <nav className="flex-1">
         <ul>
           {menuItems.map((item) => {
-            const isActive = item.activePaths.includes(location.pathname);
+            const isActive = item.activePaths.some((path) =>
+              location.pathname.startsWith(path)
+            );
 
             return (
               <li key={item.name} className="mb-2">
