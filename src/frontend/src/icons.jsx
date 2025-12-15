@@ -164,4 +164,19 @@ export const Icons = {
       <path d="M19 6a9 9 0 0 1 0 12" />
     </svg>
   ),
+  Edit: ({ size = 18, color = "#374151" }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+    </svg>
+  ),
 };

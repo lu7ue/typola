@@ -49,10 +49,10 @@ export default function OneSet() {
           {openMenu && (
             <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden z-30">
               <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
-                Edit
+                Edit Info
               </button>
               <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
-                Export
+                Export Set
               </button>
               <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
                 Delete
@@ -95,10 +95,24 @@ export default function OneSet() {
 
       {/* Cards */}
       <div className="space-y-4">
-        <h3 className="font-semibold">
-          Terms in this set{" "}
-          <span className="text-gray-500 font-normal">({set.cardCount})</span>
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold">
+            Terms in this set{" "}
+            <span className="text-gray-500 font-normal">({set.cardCount})</span>
+          </h3>
+
+          {/* Edit mode hint */}
+          <div className="relative group">
+            <button className="p-2 rounded-full hover:bg-gray-100">
+              <Icons.Edit />
+            </button>
+
+            {/* Hover hint */}
+            <div className="pointer-events-none absolute top-full right-0 mt-2 w-36 bg-gray-800 text-white text-sm rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition z-40">
+              Modify the terms in this set.
+            </div>
+          </div>
+        </div>
 
         <div className="bg-gray-50 rounded-xl p-4 space-y-3">
           {set.cards.map((card) => (
