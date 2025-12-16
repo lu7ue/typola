@@ -1,4 +1,4 @@
-const { sqliteTable, text, integer } = require("drizzle-orm/sqlite-core");
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 /**
  * Sets table
@@ -27,4 +27,4 @@ const cards = sqliteTable("cards", {
     audio: text("audio"),
 });
 
-module.exports = { sets, cards };
+export { sets, cards };

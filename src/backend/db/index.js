@@ -1,9 +1,11 @@
-const Database = require("better-sqlite3");
-const { drizzle } = require("drizzle-orm/better-sqlite3");
-const path = require("path");
-const { app } = require("electron");
+import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
+import * as schema from "./schema.js";
 
-const schema = require("./schema");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // database path
 const dbPath = path.join(__dirname, "db.sqlite");
@@ -15,4 +17,4 @@ sqlite.pragma("foreign_keys = ON");
 // create Drizzle ORM db
 const db = drizzle(sqlite, { schema });
 
-module.exports = { db, sqlite };
+export { db, sqlite };

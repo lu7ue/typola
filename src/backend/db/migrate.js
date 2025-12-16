@@ -1,4 +1,4 @@
-const { sqlite } = require("./index");
+import { sqlite } from "./index.js";
 
 function runMigrations() {
     sqlite.exec(`
@@ -21,4 +21,4 @@ function runMigrations() {
 `);
 }
 
-module.exports = { runMigrations };
+export { runMigrations };

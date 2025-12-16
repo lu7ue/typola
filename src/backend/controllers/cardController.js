@@ -1,5 +1,5 @@
-const {db, sqlite} = require("../db/index");
-const {sets, cards} = require("../db/schema");
+import { db, sqlite } from "../db/index.js";
+import { sets, cards } from "../db/schema.js";
 
 const setDB = (_database) => {
 };
@@ -11,7 +11,7 @@ const setDB = (_database) => {
  * @returns {number}
  */
 const createSet = async (title, description) => {
-    const result = await db.insert(sets).values({title, description}).run();
+    const result = await db.insert(sets).values({ title, description }).run();
     return result.lastInsertRowid;
 };
 
@@ -44,11 +44,11 @@ const getAllSets = async () => {
     const rows = sqlite
         .prepare(`
             SELECT s.id,
-                   s.title,
-                   s.description,
-                   COUNT(c.id) AS cardCount
+                    s.title,
+                    s.description,
+                    COUNT(c.id) AS cardCount
             FROM sets s
-                     LEFT JOIN cards c ON c.set_id = s.id
+                        LEFT JOIN cards c ON c.set_id = s.id
             GROUP BY s.id
             ORDER BY s.id DESC
         `)
@@ -89,5 +89,5 @@ const getSetById = async (id) => {
     };
 };
 
-module.exports = {setDB, createSet, createCard, getAllSets, getSetById};
+export { setDB, createSet, createCard, getAllSets, getSetById };
 

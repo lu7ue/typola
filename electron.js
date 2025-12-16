@@ -1,13 +1,17 @@
-const {app, BrowserWindow, ipcMain, Menu} = require("electron");
-const path = require("path");
+import { app, BrowserWindow, ipcMain, Menu } from "electron";
+import path from "path";
+import { fileURLToPath } from "url";
+import { db, sqlite } from "./src/backend/db/index.js";
+import { runMigrations } from "./src/backend/db/migrate.js";
+import * as cardController from "./src/backend/controllers/cardController.js";
 
-const {db, sqlite} = require("./src/backend/db/index.js");
-const {runMigrations} = require("./src/backend/db/migrate.js");
-const cardController = require("./src/backend/controllers/cardController.js");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let win;
 
 function createWindow() {
+    
     const isMac = process.platform === "darwin";
 
     win = new BrowserWindow({
@@ -20,7 +24,6 @@ function createWindow() {
         },
     });
 
-    // Window controls handlers
     ipcMain.handle("win:minimize", () => win?.minimize());
     ipcMain.handle("win:maximize", () => {
         if (!win) return;
@@ -53,9 +56,7 @@ app.whenReady().then(() => {
         cardController.createCard(card)
     );
 
-    ipcMain.handle("db:getAllSets", () =>
-        cardController.getAllSets()
-    );
+    ipcMain.handle("db:getAllSets", () => cardController.getAllSets());
 
     ipcMain.handle("db:getSetById", (event, id) =>
         cardController.getSetById(id)
@@ -63,7 +64,6 @@ app.whenReady().then(() => {
 
     createWindow();
 });
-
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") app.quit();

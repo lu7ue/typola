@@ -1,5 +1,5 @@
-const { spawn } = require("child_process");
-const waitOn = require("wait-on");
+import { spawn } from "child_process";
+import waitOn from "wait-on";
 
 waitOn({ resources: ["http://localhost:5173"] }, (err) => {
   if (err) {
