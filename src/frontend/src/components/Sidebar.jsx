@@ -34,9 +34,8 @@ export default function Sidebar({ collapsed, setCollapsed }) {
 
   return (
     <div
-      className={`bg-white text-black flex flex-col transition-all duration-300 border-r-2 border-gray-200 ${
-        collapsed ? "w-14" : "w-48"
-      } px-1 py-4`}
+      className={`bg-white text-black flex flex-col transition-all duration-300 border-r-2 border-gray-200 ${collapsed ? "w-14" : "w-48"
+        } px-1 py-4`}
     >
       {/* Logo and collapse button */}
       <div className="flex items-center justify-between px-2 mb-4">
@@ -52,27 +51,23 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       {/* Navigation menu */}
       <nav className="flex-1">
         <ul>
-          {menuItems.map((item) => {
-            const isActive = item.activePaths.some((path) =>
-              location.pathname.startsWith(path)
-            );
-
-            return (
-              <li key={item.name} className="mb-2">
-                <NavLink
-                  to={item.path}
-                  className={`flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${
-                    isActive
-                      ? "bg-[#7e7bf1] text-black"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <item.Icon />
-                  {!collapsed && <span>{item.name}</span>}
-                </NavLink>
-              </li>
-            );
-          })}
+          {menuItems.map((item) => (
+            <li key={item.name} className="mb-2">
+              <NavLink
+                to={item.path}
+                className={() => {
+                  const active = item.activePaths.some(
+                    (p) => location.pathname === p || location.pathname.startsWith(p + "/")
+                  );
+                  return `flex items-center gap-3 p-3 rounded-xl transition-all duration-200 ${active ? "bg-[#7e7bf1] text-black" : "text-gray-700 hover:bg-gray-100"
+                    }`;
+                }}
+              >
+                <item.Icon />
+                {!collapsed && <span>{item.name}</span>}
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
 
