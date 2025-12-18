@@ -77,6 +77,14 @@ app.whenReady().then(() => {
         )
     );
 
+    ipcMain.handle("db:updateCard", (e, card) =>
+        cardController.updateCardById(card)
+    );
+
+    ipcMain.handle("db:deleteCards", (e, ids) =>
+        cardController.deleteCardsByIds(ids)
+    );
+
     createWindow();
 });
 

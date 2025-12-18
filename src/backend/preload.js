@@ -11,6 +11,9 @@ contextBridge.exposeInMainWorld("backend", {
     updateSetLanguages: (payload) =>
         ipcRenderer.invoke("db:updateSetLanguages", payload),
 
+    updateCard: (card) => ipcRenderer.invoke("db:updateCard", card),
+    deleteCards: (ids) => ipcRenderer.invoke("db:deleteCards", ids),
+
     platform: process.platform,
     minimize: () => ipcRenderer.invoke("win:minimize"),
     maximize: () => ipcRenderer.invoke("win:maximize"),

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Icons } from "../icons";
 import CustomSelect from "../components/Select";
+import EditableCards from "../components/EditableCards";
 
 export default function OneSet() {
   const { setId } = useParams();
@@ -27,10 +28,11 @@ export default function OneSet() {
     []
   );
 
+  const [isEditingCards, setIsEditingCards] = useState(false);
+  const [draftCards, setDraftCards] = useState([]);
+
   useEffect(() => {
-    window.backend.getSetById(Number(setId)).then((data) => {
-      setSet(data);
-    });
+    window.backend.getSetById(Number(setId)).then(setSet);
   }, [setId]);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function OneSet() {
   useEffect(() => {
     const onPointerDown = (e) => {
       if (!openMenu) return;
-      if (menuRef.current && menuRef.current.contains(e.target)) return;
+      if (menuRef.current?.contains(e.target)) return;
       setOpenMenu(false);
     };
     document.addEventListener("pointerdown", onPointerDown);
@@ -54,12 +56,10 @@ export default function OneSet() {
 
   if (!set) return null;
 
-  const cancelEdit = () => {
-    const ok = window.confirm(
-      "Leaving now will discard your changes. Continue?"
-    );
-    if (!ok) return;
-
+  const cancelEditInfo = () => {
+    if (!window.confirm("Leaving now will discard your changes. Continue?")) {
+      return;
+    }
     const firstCard = set.cards[0];
     setDraftTitle(set.title || "");
     setDraftDescription(set.description || "");
@@ -68,27 +68,22 @@ export default function OneSet() {
     setIsEditing(false);
   };
 
-  const saveChanges = async () => {
-    try {
-      await window.backend.updateSetInfo({
-        id: set.id,
-        title: draftTitle,
-        description: draftDescription,
-      });
+  const saveEditInfo = async () => {
+    await window.backend.updateSetInfo({
+      id: set.id,
+      title: draftTitle,
+      description: draftDescription,
+    });
 
-      await window.backend.updateSetLanguages({
-        setId: set.id,
-        termLanguage: draftTermLang,
-        definitionLanguage: draftDefLang,
-      });
+    await window.backend.updateSetLanguages({
+      setId: set.id,
+      termLanguage: draftTermLang,
+      definitionLanguage: draftDefLang,
+    });
 
-      const updated = await window.backend.getSetById(set.id);
-      setSet(updated);
-      setIsEditing(false);
-    } catch (err) {
-      console.error("Failed to save set changes:", err);
-      alert("Failed to save changes. Check console.");
-    }
+    const updated = await window.backend.getSetById(set.id);
+    setSet(updated);
+    setIsEditing(false);
   };
 
   const inputClass =
@@ -96,7 +91,6 @@ export default function OneSet() {
 
   return (
     <div className="space-y-6 w-full">
-      {/* Back */}
       <div>
         <button
           onClick={() => navigate(-1)}
@@ -106,7 +100,6 @@ export default function OneSet() {
         </button>
       </div>
 
-      {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
           {!isEditing ? (
@@ -145,6 +138,7 @@ export default function OneSet() {
             <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-xl shadow-lg z-30">
               <button
                 onClick={() => {
+                  if (isEditingCards) return;
                   setIsEditing(true);
                   setOpenMenu(false);
                 }}
@@ -173,7 +167,6 @@ export default function OneSet() {
               <CustomSelect
                 value={draftTermLang}
                 onChange={setDraftTermLang}
-                placeholder="Select language"
                 options={languageOptions}
               />
             </div>
@@ -185,21 +178,20 @@ export default function OneSet() {
               <CustomSelect
                 value={draftDefLang}
                 onChange={setDraftDefLang}
-                placeholder="Select language"
                 options={languageOptions}
               />
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-6 flex flex-col sm:flex-row sm:justify-end gap-4">
+          <div className="border-t border-gray-200 pt-6 flex justify-end gap-4">
             <button
-              onClick={cancelEdit}
+              onClick={cancelEditInfo}
               className="px-5 py-2 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
             >
               Cancel
             </button>
             <button
-              onClick={saveChanges}
+              onClick={saveEditInfo}
               className="px-5 py-2 rounded-full bg-[#7e7bf1] text-white hover:opacity-90"
             >
               Save changes
@@ -208,7 +200,6 @@ export default function OneSet() {
         </div>
       )}
 
-      {/* Modes */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {["Typing Mode", "Practice Mode", "Exam Mode"].map((m) => (
           <button
@@ -222,54 +213,106 @@ export default function OneSet() {
 
       <hr className="border-gray-200" />
 
-      {/* Cards */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-semibold">
-            Terms in this set{" "}
-            <span className="text-gray-500 font-normal">({set.cardCount})</span>
-          </h3>
+      {!isEditingCards ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold">
+              Terms in this set{" "}
+              <span className="text-gray-500 font-normal">
+                ({set.cardCount})
+              </span>
+            </h3>
 
-          <div className="relative group">
-            <button className="p-2 rounded-full hover:bg-gray-100">
+            <button
+              onClick={() => {
+                if (isEditing) return;
+                setDraftCards(
+                  set.cards.map((c) => ({
+                    id: c.id,
+                    term: c.term,
+                    definition: c.definition,
+                  }))
+                );
+                setIsEditingCards(true);
+              }}
+              className="p-2 rounded-full hover:bg-gray-100"
+            >
               <Icons.Edit />
             </button>
+          </div>
 
-            <div className="pointer-events-none absolute top-full right-0 mt-2 w-36 bg-gray-800 text-white text-sm rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 transition z-40">
-              Modify the terms in this set.
-            </div>
+          <div className="bg-gray-50 rounded-xl p-4 space-y-3">
+            {set.cards.map((card) => (
+              <div
+                key={card.id}
+                className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-start gap-4"
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-gray-400 mb-1">TERM</div>
+                  <div className="text-gray-900 break-words">{card.term}</div>
+                </div>
+
+                <div className="w-px bg-gray-200 self-stretch" />
+
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs text-gray-400 mb-1">DEFINITION</div>
+                  <div className="text-gray-900 break-words">
+                    {card.definition}
+                  </div>
+                </div>
+
+                <div className="w-px bg-gray-200 self-stretch" />
+
+                <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200">
+                  <Icons.Audio />
+                </button>
+              </div>
+            ))}
           </div>
         </div>
+      ) : (
+        <EditableCards
+          cards={draftCards}
+          setCards={setDraftCards}
+          onCancel={() => {
+            if (!window.confirm("Discard changes?")) return;
+            setDraftCards([]);
+            setIsEditingCards(false);
+          }}
+          onSave={async () => {
+            const existingIds = set.cards.map((c) => c.id);
+            const draftIds = draftCards
+              .filter((c) => !c._isNew)
+              .map((c) => c.id);
 
-        <div className="bg-gray-50 rounded-xl p-4 space-y-3">
-          {set.cards.map((card) => (
-            <div
-              key={card.id}
-              className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-start gap-4"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="text-xs text-gray-400 mb-1">TERM</div>
-                <div className="text-gray-900 break-words">{card.term}</div>
-              </div>
+            const deletedIds = existingIds.filter(
+              (id) => !draftIds.includes(id)
+            );
+            if (deletedIds.length) {
+              await window.backend.deleteCards(deletedIds);
+            }
 
-              <div className="w-px bg-gray-200 self-stretch" />
+            for (const card of draftCards) {
+              if (card._isNew) {
+                await window.backend.createCard({
+                  set_id: set.id,
+                  term: card.term,
+                  definition: card.definition,
+                  term_language: set.cards[0].term_language,
+                  definition_language: set.cards[0].definition_language,
+                });
+              } else {
+                await window.backend.updateCard(card);
+              }
+            }
 
-              <div className="flex-1 min-w-0">
-                <div className="text-xs text-gray-400 mb-1">DEFINITION</div>
-                <div className="text-gray-900 break-words">
-                  {card.definition}
-                </div>
-              </div>
-
-              <div className="w-px bg-gray-200 self-stretch" />
-
-              <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-200">
-                <Icons.Audio />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+            const updated = await window.backend.getSetById(set.id);
+            setSet(updated);
+            setDraftCards([]);
+            setIsEditingCards(false);
+          }}
+        />
+      )}
     </div>
   );
 }

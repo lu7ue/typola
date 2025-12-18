@@ -100,7 +100,7 @@ const updateSetInfo = async (id, title, description) => {
         .prepare(
             `
                 UPDATE sets
-                SET title = ?,
+                SET title       = ?,
                     description = ?
                 WHERE id = ?
             `
@@ -125,13 +125,45 @@ const updateSetLanguages = async (
         .prepare(
             `
                 UPDATE cards
-                SET term_language = ?,
+                SET term_language       = ?,
                     definition_language = ?
                 WHERE set_id = ?
             `
         )
         .run(termLanguage, definitionLanguage, setId);
 
+    return result.changes;
+};
+
+/**
+ * update single card
+ */
+const updateCardById = async (card) => {
+    const result = sqlite
+        .prepare(
+            `
+                UPDATE cards
+                SET term = ?,
+                    definition = ?
+                WHERE id = ?
+            `
+        )
+        .run(card.term, card.definition, card.id);
+
+    return result.changes;
+};
+
+/**
+ * delete cards by ids
+ */
+const deleteCardsByIds = async (ids) => {
+    if (!ids.length) return 0;
+    const placeholders = ids.map(() => "?").join(",");
+    const result = sqlite
+        .prepare(`DELETE
+                  FROM cards
+                  WHERE id IN (${placeholders})`)
+        .run(...ids);
     return result.changes;
 };
 
@@ -143,6 +175,8 @@ module.exports = {
     getSetById,
     updateSetInfo,
     updateSetLanguages,
+    updateCardById,
+    deleteCardsByIds,
 };
 
 
