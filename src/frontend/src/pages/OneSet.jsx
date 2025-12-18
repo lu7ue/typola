@@ -139,8 +139,8 @@ export default function OneSet() {
               <button
                 onClick={() => {
                   if (isEditingCards) return;
-                  setIsEditing(true);
                   setOpenMenu(false);
+                  setIsEditing(true);
                 }}
                 className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
               >
