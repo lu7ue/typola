@@ -117,7 +117,7 @@ export default function TypingMode() {
     <div className="space-y-8 w-full">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(`/set/${setId}`)}
           className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white"
         >
           Back

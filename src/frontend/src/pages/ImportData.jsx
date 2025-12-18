@@ -53,7 +53,7 @@ export default function ImportData() {
     <div className="space-y-8 w-full">
       <div>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/create")}
           className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white hover:opacity-90"
         >
           Back
