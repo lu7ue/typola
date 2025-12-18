@@ -21,8 +21,12 @@ export default function TypingMode() {
   useEffect(() => {
     if (!set) return;
     const term = set.cards[cardIndex]?.term || "";
-    setCharStates(Array.from(term).map(() => "idle"));
+    setCharStates(Array.from(term).map(() => "pending"));
     setCharIndex(0);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, [set, cardIndex]);
 
   useEffect(() => {
@@ -41,12 +45,18 @@ export default function TypingMode() {
       const term = set.cards[cardIndex].term;
       if (charIndex >= term.length) return;
 
-      if (e.key === term[charIndex]) {
+      if (e.key.toLowerCase() === term[charIndex].toLowerCase()) {
         setCharStates((prev) => {
           const next = [...prev];
           next[charIndex] = "correct";
+          for (let i = 0; i < charIndex; i++) {
+            if (next[i] === "pending") {
+              next[i] = "correct";
+            }
+          }
           return next;
         });
+
         if (charIndex + 1 === term.length) {
           if (cardIndex + 1 === set.cards.length) {
             setTimeout(() => {
@@ -65,11 +75,18 @@ export default function TypingMode() {
           next[charIndex] = "wrong";
           return next;
         });
+
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {
           setCharStates((prev) => {
             const next = [...prev];
-            next[charIndex] = "idle";
+            for (let i = 0; i < charIndex; i++) {
+              if (next[i] === "correct") {
+              } else if (next[i] === "wrong" && i === charIndex) {
+                next[i] = "pending";
+              }
+            }
+            next[charIndex] = "pending";
             return next;
           });
         }, 500);
@@ -82,11 +99,23 @@ export default function TypingMode() {
 
   if (!set) return null;
 
+  const handleRestart = () => {
+    setCardIndex(0);
+    setStarted(false);
+    const term = set.cards[0]?.term || "";
+    setCharStates(Array.from(term).map(() => "pending"));
+    setCharIndex(0);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
   const card = set.cards[cardIndex];
 
   return (
     <div className="space-y-8 w-full">
-      <div className="flex flex-wrap gap-4 items-start">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <button
           onClick={() => navigate(-1)}
           className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white"
@@ -94,57 +123,56 @@ export default function TypingMode() {
           Back
         </button>
 
-        <div className="flex flex-wrap items-center gap-4 border border-gray-300 rounded-lg px-4 py-1 bg-white">
+        <div className="flex flex-wrap items-center gap-4 border border-gray-300 rounded-lg px-4 py-1 bg-white ml-auto">
           <div className="font-medium">{set.title}</div>
           <button className="text-[#7e7bf1]">Pause</button>
-          <button
-            className="text-[#7e7bf1]"
-            onClick={() => {
-              setCardIndex(0);
-              setStarted(false);
-            }}
-          >
+          <button className="text-[#7e7bf1]" onClick={handleRestart}>
             Restart
           </button>
         </div>
       </div>
 
-      {!started && (
+      <div className="flex items-center justify-center min-h-[60vh]">
         <div className="relative text-center">
-          <div className="text-gray-500 mb-6">Press any key to start</div>
-          <div className="blur-sm opacity-40">
-            <div className="text-5xl mb-4">{card.term}</div>
-            <div className="text-lg">{card.definition}</div>
+          <div
+            className={`space-y-4 transition ${
+              !started ? "opacity-40 blur-[2px]" : "opacity-100 blur-0"
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2 text-5xl">
+              {card.term.split("").map((ch, i) => (
+                <span
+                  key={i}
+                  className={
+                    started
+                      ? charStates[i] === "correct"
+                        ? "text-green-500"
+                        : charStates[i] === "wrong"
+                          ? "text-red-500"
+                          : "text-gray-300"
+                      : "text-gray-300"
+                  }
+                >
+                  {ch}
+                </span>
+              ))}
+              <button>
+                <Icons.Audio size={20} />
+              </button>
+            </div>
+
+            <div className="text-lg text-gray-700">{card.definition}</div>
           </div>
+
+          {!started && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="text-2xl font-medium text-gray-600 whitespace-nowrap">
+                Press any key to start
+              </div>
+            </div>
+          )}
         </div>
-      )}
-
-      {started && (
-        <div className="text-center space-y-6">
-          <div className="text-5xl tracking-wide">
-            {card.term.split("").map((ch, i) => (
-              <span
-                key={i}
-                className={
-                  charStates[i] === "correct"
-                    ? "text-green-500"
-                    : charStates[i] === "wrong"
-                      ? "text-red-500"
-                      : "text-gray-400"
-                }
-              >
-                {ch}
-              </span>
-            ))}
-          </div>
-
-          <button className="mx-auto block">
-            <Icons.Audio size={22} />
-          </button>
-
-          <div className="text-lg text-gray-700">{card.definition}</div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

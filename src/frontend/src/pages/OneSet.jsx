@@ -218,7 +218,7 @@ export default function OneSet() {
           disabled={modeDisabled}
           onClick={() => {
             if (modeDisabled) return;
-            navigate(`/set/${set.id}/typing`);
+            navigate(`/set/${set.id}/typingMode`);
           }}
           className={`h-11 rounded-lg ${
             modeDisabled
