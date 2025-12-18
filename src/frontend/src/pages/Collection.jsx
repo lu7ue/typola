@@ -30,7 +30,6 @@ export default function Collection() {
 
   return (
     <div className="space-y-8 w-full">
-      {/* Header */}
       <div>
         <h2 className="text-2xl mb-1">Collection</h2>
       </div>
@@ -43,16 +42,12 @@ export default function Collection() {
             className="bg-gray-100 rounded-xl p-3 cursor-pointer transition-transform duration-200 hover:scale-[1.015]"
           >
             <div className="bg-white rounded-xl border border-gray-200 px-4 py-3 flex items-start justify-between gap-4">
-              {/* Left */}
               <div className="flex items-start gap-4 min-w-0">
-                {/* Progress */}
                 <div className="w-14 h-14 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center font-semibold text-black shrink-0 mt-1">
                   0%
                 </div>
 
-                {/* Text */}
                 <div className="flex flex-col justify-between h-full min-w-0">
-                  {/* Title + count */}
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-1 min-w-0">
                     <div className="font-semibold text-black truncate">
                       {set.title}
@@ -62,7 +57,6 @@ export default function Collection() {
                     </div>
                   </div>
 
-                  {/* Description */}
                   {set.description && (
                     <div className="text-sm text-gray-500 line-clamp-2">
                       {set.description}
@@ -71,8 +65,16 @@ export default function Collection() {
                 </div>
               </div>
 
-              {/* Right menu */}
-              <div className="relative" ref={menuRef}>
+              <div
+                className="relative"
+                ref={menuRef}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -88,7 +90,22 @@ export default function Collection() {
                     <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
                       Export this set
                     </button>
-                    <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
+                    <button
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const ok = window.confirm(
+                          `Delete this set?\n\n"${set.title}"`
+                        );
+                        if (!ok) return;
+
+                        await window.backend.deleteSet(set.id);
+                        setSets((prev) => prev.filter((s) => s.id !== set.id));
+                        setOpenMenuId(null);
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+                    >
                       Delete
                     </button>
                   </div>

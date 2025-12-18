@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld("backend", {
     updateCard: (card) => ipcRenderer.invoke("db:updateCard", card),
     deleteCards: (ids) => ipcRenderer.invoke("db:deleteCards", ids),
 
+    deleteSet: (id) => ipcRenderer.invoke("db:deleteSet", id),
+
     platform: process.platform,
     minimize: () => ipcRenderer.invoke("win:minimize"),
     maximize: () => ipcRenderer.invoke("win:maximize"),

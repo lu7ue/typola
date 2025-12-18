@@ -143,7 +143,7 @@ const updateCardById = async (card) => {
         .prepare(
             `
                 UPDATE cards
-                SET term = ?,
+                SET term       = ?,
                     definition = ?
                 WHERE id = ?
             `
@@ -167,6 +167,13 @@ const deleteCardsByIds = async (ids) => {
     return result.changes;
 };
 
+const deleteSetById = async (id) => {
+    const result = sqlite
+        .prepare("DELETE FROM sets WHERE id = ?")
+        .run(id);
+    return result.changes;
+};
+
 module.exports = {
     setDB,
     createSet,
@@ -177,6 +184,7 @@ module.exports = {
     updateSetLanguages,
     updateCardById,
     deleteCardsByIds,
+    deleteSetById,
 };
 
 

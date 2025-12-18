@@ -85,6 +85,10 @@ app.whenReady().then(() => {
         cardController.deleteCardsByIds(ids)
     );
 
+    ipcMain.handle("db:deleteSet", (e, id) =>
+        cardController.deleteSetById(id)
+    );
+
     createWindow();
 });
 

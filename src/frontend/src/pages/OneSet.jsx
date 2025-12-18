@@ -94,9 +94,9 @@ export default function OneSet() {
       <div>
         <button
           onClick={() => navigate(-1)}
-          className="px-5 py-2 rounded-full bg-[#7e7bf1] text-white hover:opacity-90"
+          className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white hover:opacity-90"
         >
-          ← Back
+          Back
         </button>
       </div>
 
@@ -149,7 +149,18 @@ export default function OneSet() {
               <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
                 Export Set
               </button>
-              <button className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100">
+              <button
+                onClick={async () => {
+                  const ok = window.confirm(
+                    `Delete this set?\n\n"${set.title}"`
+                  );
+                  if (!ok) return;
+
+                  await window.backend.deleteSet(set.id);
+                  navigate(-1);
+                }}
+                className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+              >
                 Delete
               </button>
             </div>
@@ -226,6 +237,7 @@ export default function OneSet() {
             <button
               onClick={() => {
                 if (isEditing) return;
+                setOpenMenu(false);
                 setDraftCards(
                   set.cards.map((c) => ({
                     id: c.id,
