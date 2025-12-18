@@ -5,6 +5,11 @@ contextBridge.exposeInMainWorld("backend", {
     createCard: (card) => ipcRenderer.invoke("db:createCard", card),
     getAllSets: () => ipcRenderer.invoke("db:getAllSets"),
     getSetById: (id) => ipcRenderer.invoke("db:getSetById", id),
+    updateSetInfo: (payload) =>
+        ipcRenderer.invoke("db:updateSetInfo", payload),
+
+    updateSetLanguages: (payload) =>
+        ipcRenderer.invoke("db:updateSetLanguages", payload),
 
     platform: process.platform,
     minimize: () => ipcRenderer.invoke("win:minimize"),

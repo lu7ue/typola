@@ -89,5 +89,60 @@ const getSetById = async (id) => {
     };
 };
 
-module.exports = {setDB, createSet, createCard, getAllSets, getSetById};
+/**
+ * update set basic info
+ * @param {number} id
+ * @param {string} title
+ * @param {string} description
+ */
+const updateSetInfo = async (id, title, description) => {
+    const result = sqlite
+        .prepare(
+            `
+                UPDATE sets
+                SET title = ?,
+                    description = ?
+                WHERE id = ?
+            `
+        )
+        .run(title, description ?? null, id);
+
+    return result.changes;
+};
+
+/**
+ * update languages for all cards in a set
+ * @param {number} setId
+ * @param {string} termLanguage
+ * @param {string} definitionLanguage
+ */
+const updateSetLanguages = async (
+    setId,
+    termLanguage,
+    definitionLanguage
+) => {
+    const result = sqlite
+        .prepare(
+            `
+                UPDATE cards
+                SET term_language = ?,
+                    definition_language = ?
+                WHERE set_id = ?
+            `
+        )
+        .run(termLanguage, definitionLanguage, setId);
+
+    return result.changes;
+};
+
+module.exports = {
+    setDB,
+    createSet,
+    createCard,
+    getAllSets,
+    getSetById,
+    updateSetInfo,
+    updateSetLanguages,
+};
+
 

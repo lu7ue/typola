@@ -61,6 +61,22 @@ app.whenReady().then(() => {
         cardController.getSetById(id)
     );
 
+    ipcMain.handle("db:updateSetInfo", (event, payload) =>
+        cardController.updateSetInfo(
+            payload.id,
+            payload.title,
+            payload.description
+        )
+    );
+
+    ipcMain.handle("db:updateSetLanguages", (event, payload) =>
+        cardController.updateSetLanguages(
+            payload.setId,
+            payload.termLanguage,
+            payload.definitionLanguage
+        )
+    );
+
     createWindow();
 });
 
