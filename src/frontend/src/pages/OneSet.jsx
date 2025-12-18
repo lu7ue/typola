@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Icons } from "../icons";
 
 export default function OneSet() {
@@ -7,6 +7,7 @@ export default function OneSet() {
   const [set, setSet] = useState(null);
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.backend.getSetById(Number(setId)).then(setSet);
@@ -27,6 +28,15 @@ export default function OneSet() {
 
   return (
     <div className="space-y-6 w-full">
+      <div>
+        <button
+          onClick={() => navigate(-1)}
+          className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white hover:opacity-90"
+        >
+          Back
+        </button>
+      </div>
+
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         {/* Title + description */}

@@ -51,6 +51,15 @@ export default function ImportData() {
 
   return (
     <div className="space-y-8 w-full">
+      <div>
+        <button
+          onClick={() => navigate(-1)}
+          className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white hover:opacity-90"
+        >
+          Back
+        </button>
+      </div>
+
       {/* Header */}
       <div>
         <h2 className="text-2xl mb-1">Import your data</h2>
