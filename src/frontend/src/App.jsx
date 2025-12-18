@@ -8,6 +8,7 @@ import Insights from "./pages/Insights";
 import Setting from "./pages/Setting";
 import ImportData from "./pages/ImportData";
 import OneSet from "./pages/OneSet";
+import TypingMode from "./pages/TypingMode";
 
 export default function App() {
   const [collapsed, setCollapsed] = useState(false);
@@ -49,6 +50,7 @@ export default function App() {
                 <Route path="/setting" element={<Setting />} />
                 <Route path="/importData" element={<ImportData />} />
                 <Route path="/set/:setId" element={<OneSet />} />
+                <Route path="/set/:setId/typingMode" element={<TypingMode />} />
               </Routes>
             </div>
           </div>

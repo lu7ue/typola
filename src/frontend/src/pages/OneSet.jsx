@@ -89,6 +89,8 @@ export default function OneSet() {
   const inputClass =
     "w-full p-4 border-2 rounded-lg bg-white focus:outline-none focus:border-[#7e7bf1] border-gray-300";
 
+  const modeDisabled = isEditing || isEditingCards;
+
   return (
     <div className="space-y-6 w-full">
       <div>
@@ -212,14 +214,50 @@ export default function OneSet() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {["Typing Mode", "Practice Mode", "Exam Mode"].map((m) => (
-          <button
-            key={m}
-            className="h-11 bg-gray-100 rounded-lg hover:bg-gray-200"
-          >
-            {m}
-          </button>
-        ))}
+        <button
+          disabled={modeDisabled}
+          onClick={() => {
+            if (modeDisabled) return;
+            navigate(`/set/${set.id}/typing`);
+          }}
+          className={`h-11 rounded-lg ${
+            modeDisabled
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
+        >
+          Typing Mode
+        </button>
+
+        <button
+          disabled={modeDisabled}
+          onClick={() => {
+            if (modeDisabled) return;
+            window.alert("Practice mode is not implemented yet.");
+          }}
+          className={`h-11 rounded-lg ${
+            modeDisabled
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
+        >
+          Practice Mode
+        </button>
+
+        <button
+          disabled={modeDisabled}
+          onClick={() => {
+            if (modeDisabled) return;
+            window.alert("Exam mode is not implemented yet.");
+          }}
+          className={`h-11 rounded-lg ${
+            modeDisabled
+              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
+        >
+          Exam Mode
+        </button>
       </div>
 
       <hr className="border-gray-200" />
