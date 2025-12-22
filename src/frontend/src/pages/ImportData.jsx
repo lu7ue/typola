@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 export default function ImportData() {
   const navigate = useNavigate();
@@ -51,14 +52,7 @@ export default function ImportData() {
 
   return (
     <div className="space-y-8 w-full">
-      <div>
-        <button
-          onClick={() => navigate("/create")}
-          className="px-6 py-1 rounded-sm bg-[#7e7bf1] text-white hover:opacity-90"
-        >
-          Back
-        </button>
-      </div>
+      <BackButton to="/create" />
 
       {/* Header */}
       <div>
